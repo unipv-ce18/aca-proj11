@@ -1,0 +1,37 @@
+#include "operators.h"
+
+#include "StrEl.h"
+
+#include <opencv2/core/core.hpp>
+#include <iostream>
+
+cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl) {
+    assert(image.type() == CV_8UC1);
+
+    cv::Size imSize = image.size();
+    cv::Mat output(imSize, CV_8UC1);
+
+    for (int y = 0; y < imSize.height; ++y) {
+        for (int x = 0; x < imSize.width; ++x) {
+
+            int val = 0;
+
+            for (int i = strEl.yMin(); i <= strEl.yMax(); ++i) {
+                for (int j = strEl.xMin(); j <= strEl.xMax(); ++j) {
+                    int u = x + i;
+                    int v = y + j;
+
+                    if (v < 0 || v >= imSize.height) continue;
+                    if (u < 0 || u >= imSize.width) continue;
+                    if (!strEl.isSet(i, j)) continue;
+
+                    int m = image.at<uint8_t>(v, u) + strEl.at(j, i);
+                    if (m > val) val = m;
+                }
+            }
+            output.at<uint8_t>(y, x) = static_cast<uint8_t>(val < 0xFF ? val : 0xFF);
+        }
+    }
+
+    return output;
+}

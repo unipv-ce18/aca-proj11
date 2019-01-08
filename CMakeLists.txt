@@ -4,11 +4,13 @@ project(aca_project)
 set(CMAKE_CXX_STANDARD 14)
 
 set(HEADERS
-        src/morphology/StrEl.h)
+        src/morphology/StrEl.h
+        src/morphology/operators.h)
 
 set(SOURCES
         src/morph.cpp
-        src/morphology/StrEl.cpp)
+        src/morphology/StrEl.cpp
+        src/morphology/operators.cpp)
 
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
