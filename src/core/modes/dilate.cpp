@@ -2,8 +2,6 @@
 
 #include "../../morphology/StrEl.h"
 #include "../../morphology/operators.h"
-#include "../../parallel/planners.h"
-#include "../../parallel/ostream_dump.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>

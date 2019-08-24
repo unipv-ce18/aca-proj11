@@ -1,6 +1,7 @@
 #include "modes.h"
 #include "modes/dilate.h"
 #include "modes/erode.h"
+#include "modes/dump_plan.h"
 
 #include <iostream>
 #include <string>
@@ -18,6 +19,7 @@ ModeProc getRunMode(const char *modeStr) {
     const std::string &mode{modeStr};
     if (mode == "dilate") return dilateProc;
     if (mode == "erode") return erodeProc;
+    if (mode == "dumpplan") return dumpPlanProc;
 
     return nullptr;
 }
@@ -28,5 +30,7 @@ void printUsage(const char *execStr) {
               << "  dilate <structural element path> <image path> [<output path>]\n"
                  "    Perform dilation on a given image\n"
               << "  erode <structural element path> <image path> [<output path>]\n"
-                 "    Perform erosion on a given image\n";
+                 "    Perform erosion on a given image\n"
+              << "  dumpPlan <width> <height> <safe padding> <cores>\n"
+              << "    Dump an execution plan for the given parameters in JSON format\n";
 }

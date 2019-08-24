@@ -6,17 +6,27 @@ set(CMAKE_CXX_STANDARD 14)
 set(HEADERS
         src/core/modes.h
         src/core/modes/dilate.h
+        src/core/modes/dump_plan.h
         src/core/modes/erode.h
         src/morphology/StrEl.h
-        src/morphology/operators.h)
+        src/morphology/operators.h
+        src/parallel/even_region.h
+        src/parallel/ostream_dump.h
+        src/parallel/Plan.h
+        src/parallel/planners.h
+        src/parallel/RegionSpec.h)
 
 set(SOURCES
         src/morph.cpp
         src/core/modes.cpp
         src/core/modes/dilate.cpp
+        src/core/modes/dump_plan.cpp
         src/core/modes/erode.cpp
         src/morphology/StrEl.cpp
-        src/morphology/operators.cpp)
+        src/morphology/operators.cpp
+        src/parallel/even_region.cpp
+        src/parallel/ostream_dump_json.cpp
+        src/parallel/planners_simd.cpp)
 
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
