@@ -4,11 +4,17 @@ project(aca_project)
 set(CMAKE_CXX_STANDARD 14)
 
 set(HEADERS
+        src/core/modes.h
+        src/core/modes/dilate.h
+        src/core/modes/erode.h
         src/morphology/StrEl.h
         src/morphology/operators.h)
 
 set(SOURCES
         src/morph.cpp
+        src/core/modes.cpp
+        src/core/modes/dilate.cpp
+        src/core/modes/erode.cpp
         src/morphology/StrEl.cpp
         src/morphology/operators.cpp)
 
