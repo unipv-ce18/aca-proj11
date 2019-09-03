@@ -14,6 +14,8 @@ set(HEADERS
         src/parallel/ostream_dump.h
         src/parallel/Plan.h
         src/parallel/planners.h
+        src/parallel/CoreAllocation.h
+        src/parallel/Rect.h
         src/parallel/RegionSpec.h)
 
 set(SOURCES
@@ -26,7 +28,7 @@ set(SOURCES
         src/morphology/operators.cpp
         src/parallel/even_region.cpp
         src/parallel/ostream_dump_json.cpp
-        src/parallel/planners_simd.cpp)
+        src/parallel/planner_simd.cpp)
 
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
