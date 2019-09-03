@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(aca_project)
+project(aca_project CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -62,7 +62,9 @@ else ()
 
 endif ()
 
+find_package(OpenMP REQUIRED)
 find_package(OpenCV REQUIRED)
 
 add_executable(morph ${HEADERS} ${SOURCES})
-target_link_libraries(morph ${OpenCV_LIBS})
+target_link_libraries(morph PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(morph PUBLIC ${OpenCV_LIBS})
