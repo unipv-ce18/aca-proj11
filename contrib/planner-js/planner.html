@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ur Head Must Hurt</title>
+    <meta charset="utf-8">
+    <style>
+      form div {
+        font-family: monospace;
+        margin-bottom: 10px;
+      }
+      .par input {
+        margin: 0 10px 0 5px;
+        width: 50px;
+      }
+
+      .lay input, .smd input {
+        vertical-align: sub;
+        margin-right: 6px;
+      }
+
+      #wrapper {
+        resize: both;
+        overflow: hidden;
+        width: 400px;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <form>
+      <div class="par">
+        <label for="lw" title="Width">W</label><input id="lw" type="number" value="640"/>
+        <label for="lw" title="Height">H</label><input id="lh" type="number" value="480"/>
+        <label for="lsa" title="Safe area padding">SAP</label><input id="lsa" type="number" value="3">
+        <label for="lc" title="Cores">C</label><input id="lc" type="number" value="16">
+        <label for="ch" title="Max Chunk Height">HH</label><input id="ch" type="number" value="32">
+      </div>
+      <div class="smd">
+        SIMD Width:
+        <input id="mmx" type="radio" name="smd"><label for="sse">MMX [64b]</label>
+        <input id="sse" type="radio" name="smd"><label for="sse">SSE2 [128b]</label>
+        <input id="avx" type="radio" name="smd"><label for="sse">AVX2 [256b]</label>
+        <input id="av5" type="radio" name="smd" checked><label for="sse">AVX512F [512b]</label>
+      </div>
+      <div class="lay">
+        Layers:
+        <input id="layr" type="checkbox" checked><label for="layr">Regions</label>
+        <input id="layc" type="checkbox" checked><label for="layc">Chunks</label>
+        <input id="laye" type="checkbox"><label for="laye">Opt. V Region Splits</label>
+        <input id="layd" type="checkbox"><label for="layd">Chunk Delimiters</label>
+      </div>
+    </form>
+    <div id="wrapper">
+      <canvas id="c"></canvas>
+    </div>
+
+    <script>
+      'use strict';
+      let SIMD_WIDTH = null;
+      let MAX_CHUNK_HEIGHT = null;
+
+      CanvasRenderingContext2D.prototype.strokeRectFix = function (x, y, w, h) {
+        this.strokeRect(x + .5, y + .5, w - 1, h - 1);
+      };
+
+      CanvasRenderingContext2D.prototype.strokeArrow = function (x1, y1, x2, y2) {
+        // https://stackoverflow.com/a/6333775
+        var headLen = 6;  // Length of head in pixels
+        var angle = Math.atan2(y2 - y1, x2 - x1);
+
+        this.beginPath();
+        this.moveTo(x1, y1);
+        this.lineTo(x2, y2);
+        this.lineTo(
+          x2 - headLen * Math.cos(angle - Math.PI / 6),
+          y2 - headLen * Math.sin(angle - Math.PI / 6));
+        this.moveTo(x2, y2);
+        this.lineTo(
+          x2 - headLen * Math.cos(angle + Math.PI / 6),
+          y2 - headLen * Math.sin(angle + Math.PI / 6));
+        this.stroke();
+      };
+
+      CanvasRenderingContext2D.prototype.strokeLineFix = function (x1, y1, x2, y2) {
+        this.beginPath();
+        this.moveTo(x1 + .5, y1 + .5);
+        this.lineTo(x2 + .5, y2 + .5);
+        this.stroke();
+      }
+
+
+      const inputWidth = document.getElementById('lw');
+      const inputHeight = document.getElementById('lh');
+      const wrapper = document.getElementById('wrapper');
+      const ctx = document.getElementById('c').getContext('2d');
+
+      document.querySelectorAll('.par input, .smd input')
+          .forEach(el => el.addEventListener('change' /*input*/, doUpdate));
+      document.querySelectorAll('.lay input')
+          .forEach(el => el.addEventListener('change', render));
+
+      doUpdate();
+
+      let obs = new MutationObserver(function (mutations) {
+        if (mutations[0].attributeName !== 'style') return;
+        inputWidth.value = wrapper.offsetWidth;
+        inputHeight.value = wrapper.offsetHeight;
+        doUpdate();
+      });
+      obs.observe(wrapper, { attributes: true });
+
+
+
+      function doUpdate() {
+        console.clear();
+
+        let planData = {
+          imageWidth: parseInt(inputWidth.value),
+          imageHeight: parseInt(inputHeight.value),
+          cores: parseInt(document.getElementById('lc').value),
+          sap: parseInt(document.getElementById('lsa').value),
+
+          baseRegions: null,
+          effectiveRegions: null
+        };
+
+        SIMD_WIDTH = (function () {
+          if (document.getElementById('mmx').checked) return 8;
+          if (document.getElementById('sse').checked) return 16;
+          if (document.getElementById('avx').checked) return 32;
+          if (document.getElementById('av5').checked) return 64;
+        })();
+        MAX_CHUNK_HEIGHT = parseInt(document.getElementById('ch').value);
+
+        wrapper.style.width = planData.imageWidth + 'px';
+        wrapper.style.height = planData.imageHeight + 'px';
+        ctx.canvas.width = planData.imageWidth;
+        ctx.canvas.height = planData.imageHeight;
+
+        planRegions(planData);
+        planChunks(planData);
+        console.log(planData);
+
+        window.planData = planData;
+        render();
+      }
+
+      function render() {
+        const layRegions = document.getElementById('layr').checked;
+        const layChunks = document.getElementById('layc').checked;
+        const layVSplits = document.getElementById('laye').checked;
+        const layChDelims = document.getElementById('layd').checked;
+
+        ctx.clearRect(0, 0, planData.imageWidth, planData.imageHeight);
+
+        // Regions
+        if (layRegions) {
+          planData.baseRegions.data.forEach((r,i) => {
+            ctx.strokeStyle = 'lightgrey';
+            ctx.strokeRect(r.x, r.y, r.w, r.h);
+            ctx.fillText(`#${i}`, r.x+2, r.y+10);
+          });
+        }
+
+        // Chunks
+        if (layChunks) {
+          planData.effectiveRegions.allocation.forEach((r,i) => {
+            let prevP = null;
+            r.forEach(c => {
+              let thisP = { x: c.x + c.w / 2, y: c.y + c.h / 2 };
+
+              ctx.strokeStyle = `hsl(${i * 60}, 100%, 40%)`;
+              ctx.strokeRectFix(c.x, c.y, c.w, c.h);
+
+              if (c.type) {
+                ctx.strokeStyle = 'black';
+                let a = Math.PI - c.type * Math.PI/4;
+                ctx.beginPath();
+                ctx.moveTo(thisP.x, thisP.y);
+                ctx.lineTo(thisP.x + 5 * Math.cos(a), thisP.y - 5 * Math.sin(a));
+                ctx.stroke();
+              }
+
+              if (prevP) {
+                ctx.strokeStyle = `hsla(${i * 60}, 100%, 40%, .5)`;
+                ctx.strokeArrow(prevP.x, prevP.y, thisP.x, thisP.y);
+              }
+              prevP = thisP;
+            });
+          });
+        }
+
+        if (layChDelims) {
+          ctx.strokeStyle = 'lightgreen';
+          hSteps.forEach(x => ctx.strokeLineFix(x, 0, x, planData.imageHeight));
+          ctx.strokeStyle = 'lightsalmon';
+          vSteps.forEach(y => ctx.strokeLineFix(0, y, planData.imageWidth, y));
+        }
+        if (layVSplits) {
+          ctx.strokeStyle = 'fuchsia';
+          updatedVRegions.forEach(y => ctx.strokeLineFix(0, y, planData.imageWidth, y));
+        }
+
+        // Safe Area
+        ctx.strokeStyle = 'blue';
+        ctx.strokeRectFix(planData.sap, planData.sap,
+          planData.imageWidth - 2 * planData.sap, planData.imageHeight - 2 * planData.sap);
+
+        // Outer rect
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(0, 0, planData.imageWidth, planData.imageHeight);
+
+      }
+
+      function planRegions(planData) {
+        var ratio = planData.imageWidth / planData.imageHeight;
+
+        var invRatio = ratio < 1;
+        if (invRatio) ratio = 1/ratio;
+
+        let w = planData.cores;
+        let h = 1;
+        let diff = Math.abs(Math.floor(w)/h - ratio);
+
+        while (w > 1) {
+          let nw = w/2;
+          let nh = 2*h;
+          let ndiff = Math.abs(Math.floor(nw)/nh - ratio);
+          console.log('Candidate: %.1f*%.1f ratio %.2f tgt %.2f diff %.2f', nw, nh, Math.floor(nw)/nh, ratio, ndiff);
+
+          if (ndiff > diff) break;
+
+          w = nw;
+          h = nh;
+          diff = ndiff;
+        }
+
+        w = Math.floor(w);
+        diff = Math.abs(w/h - ratio);
+        console.log('Result: %.1f*%.1f ratio %.2f tgt %.2f diff %.2f', w, h, w/h, ratio, diff);
+
+        if (invRatio) // swap
+          w = [h, h = w][0];
+
+        planData.baseRegions = {
+          coresH: w,
+          coresV: h,
+          excessCores: planData.cores - w * h,
+          data: Array(w * h)
+        };
+        console.log('Region excess cores: %d', planData.baseRegions.excessCores);
+
+        let partW = Math.floor(planData.imageWidth / w);
+        let partH = Math.floor(planData.imageHeight / h);
+        for (var j = 0; j < h; ++j) {
+          for (var i = 0; i < w; ++i) {
+            let d = {
+              x: i * partW,
+              y: j * partH,
+            };
+            d.w = (i+1) % w != 0 ? partW : planData.imageWidth - d.x;
+            d.h = (j+1) % h != 0 ? partH : planData.imageHeight - d.y;
+
+            planData.baseRegions.data[j*w+i] = d;
+            //console.log('RGN%02d: %d,%d %dx%d', j*w+i, d.x, d.y, d.w, d.h);
+          }
+        }
+      }
+
+      function planChunks(d) {
+        // Horizontal planning
+        const safeWidth = d.imageWidth - 2 * d.sap;
+        const lastChunkWidth = safeWidth % SIMD_WIDTH;
+
+        const numChunks = 2 + (lastChunkWidth == 0 ? 0 : 1) + Math.floor(safeWidth / SIMD_WIDTH);
+
+        window.hSteps = Array(numChunks);
+
+        for (let i = 0; i < numChunks; ++i) {
+          if (i == 0)  // First 'unsave area' chunk
+            hSteps[i] = 0;
+          else if (i == numChunks - 1)  // Last 'unsafe area' chunk
+            hSteps[i] = d.imageWidth - d.sap;
+          else
+            hSteps[i] = d.sap + (i-1) * SIMD_WIDTH;
+        }
+
+
+        const colsPerCore = Math.ceil(numChunks / d.baseRegions.coresH);
+
+        // Recalculate region row count to optimize core allocation
+        const lineAllocCores = Math.ceil(numChunks / colsPerCore);
+        const lineExcessCores = d.baseRegions.coresH - lineAllocCores;
+        console.log('Chunk line excess cores: %d', lineExcessCores);
+
+        const totalExcessCores = d.baseRegions.excessCores + lineExcessCores * d.baseRegions.coresV;
+        console.log('Total excess cores: %d + %d * %d = %d',
+          d.baseRegions.excessCores, lineExcessCores, d.baseRegions.coresV, totalExcessCores);
+
+        const additionalRows = Math.floor(totalExcessCores / lineAllocCores);
+        if (additionalRows > 0)
+          console.log('Planning additional %d region rows to minimize excess cores (%d -> %d)',
+            additionalRows, totalExcessCores, totalExcessCores - additionalRows * lineAllocCores);
+        else
+          console.log('Not enough unused cores to schedule for new rows');
+
+        const totalRows = d.baseRegions.coresV + additionalRows;
+
+
+        // Vertical planning
+        const rowHeight = Math.floor(d.imageHeight / totalRows);
+        window.updatedVRegions = Array(totalRows);
+        let excludedRowsTop = 0;
+        let excludedRowsBottom = 0;
+
+        for (let i = 0; i < totalRows; ++i) {
+          const split = i * rowHeight;
+          updatedVRegions[i] = split;
+          if (d.sap >= split && d.sap < split + rowHeight)
+            excludedRowsTop = i;
+          if (d.imageHeight - d.sap > split && d.imageHeight - d.sap <= split + rowHeight)
+            excludedRowsBottom = totalRows - i - 1;
+        }
+
+        let totalSafeRows = totalRows - excludedRowsTop - excludedRowsBottom;
+
+
+        // Define here, used in allocation later
+        let chunksV, chunksVFirst, chunksVLast;
+
+        if (totalSafeRows > 1) {
+          // Plan for at least 2 rows
+
+          const lastRowHeight = d.imageHeight - updatedVRegions[updatedVRegions.length - 1];
+
+          const exclPxTop = excludedRowsTop * rowHeight;
+          const exclPxBottom = excludedRowsBottom < 2
+              ? (excludedRowsBottom * lastRowHeight)
+              : (lastRowHeight + (excludedRowsBottom - 1) * rowHeight);
+
+          const sapInRegionTop = d.sap - exclPxTop;
+          const sapInRegionBottom = d.sap - exclPxBottom;
+
+          chunksV = Math.ceil(rowHeight / MAX_CHUNK_HEIGHT);
+          chunksVFirst =
+            1 + Math.ceil((rowHeight - sapInRegionTop) / MAX_CHUNK_HEIGHT);
+          chunksVLast =
+            1 + Math.ceil(((excludedRowsBottom == 0 ? lastRowHeight : rowHeight) - sapInRegionBottom) / MAX_CHUNK_HEIGHT);
+
+          window.vSteps = Array(chunksVFirst + chunksV * (totalSafeRows - 2) + chunksVLast);
+
+          // -- 1st row
+          vSteps[0] = 0;
+          vSteps[1] = d.sap;
+          for (let i = 2; i < chunksVFirst; ++i)
+            vSteps[i] = vSteps[i - 1] + MAX_CHUNK_HEIGHT;
+          // -- middle rows
+          let startIdx = chunksVFirst;
+          for (let r = excludedRowsTop + 1; r < totalRows - excludedRowsBottom - 1; ++r) {
+            vSteps[startIdx] = updatedVRegions[r];
+            for (let i = startIdx + 1; i < startIdx + chunksV; ++i) {
+              vSteps[i] = vSteps[i - 1] + MAX_CHUNK_HEIGHT;
+            }
+            startIdx += chunksV;
+          }
+          // --- final row
+          vSteps[startIdx] = updatedVRegions[totalRows - excludedRowsBottom - 1];
+          for (let i = startIdx + 1; i < startIdx + chunksVLast - 1; ++i) {
+            vSteps[i] = vSteps[i - 1] + MAX_CHUNK_HEIGHT;
+          }
+          vSteps[startIdx + chunksVLast - 1] = d.imageHeight - d.sap;
+
+        } else {
+          // Single row
+          chunksV = 2 + Math.ceil((d.imageHeight - 2 * d.sap) / MAX_CHUNK_HEIGHT);
+
+          window.vSteps = Array(chunksV);
+
+          vSteps[0] = 0;
+          vSteps[1] = d.sap;
+          for (let i = 2; i < chunksV - 1; ++i)
+            vSteps[i] = vSteps[i - 1] + MAX_CHUNK_HEIGHT;
+          vSteps[chunksV - 1] = d.imageHeight - d.sap;
+        }
+
+
+        // Assign regions to cores (horizontal first)
+        const totalUsedCores = lineAllocCores * totalSafeRows;
+        d.effectiveRegions = {
+          chunksH: hSteps.length,
+          chunksV: vSteps.length,
+          coresH: lineAllocCores,
+          coresV: totalSafeRows,
+          excessCores: d.cores - totalUsedCores,
+          allocation: Array(totalUsedCores)
+        };
+
+        console.log('hSteps', hSteps);
+        console.log('vSteps', vSteps);
+
+        for (let core = 0; core < totalUsedCores; ++core) {
+          const rgnX = core % lineAllocCores;
+          const rgnY = Math.floor(core / lineAllocCores);
+
+          const chX = rgnX * colsPerCore;
+          const chW = Math.min(colsPerCore, numChunks - chX);
+
+          const chY = rgnY > 0 ? chunksVFirst + (rgnY - 1) * chunksV : 0;
+          const chH =
+            (totalSafeRows > 1 && rgnY == 0) ? chunksVFirst :
+            (totalSafeRows > 1 && rgnY == totalSafeRows - 1) ? chunksVLast :
+            chunksV;
+
+          let coreChunks = Array(chW * chH);
+
+          for (let j = chY; j < chY + chH; ++j) {
+            for (let i = chX; i < chX + chW; ++i) {
+              coreChunks[(j - chY) * chW + i - chX] = {
+                type:
+                  (i == 0 && j == 0) ? 1 :
+                  (i == numChunks - 1 && j == 0) ? 3 :
+                  (i == numChunks - 1 && j == vSteps.length - 1) ? 5 :
+                  (i == 0 && j == vSteps.length - 1) ? 7 :
+                  (i == 0) ? 8 :
+                  (i == numChunks - 1) ? 4 :
+                  (j == 0) ? 2 :
+                  (j == vSteps.length - 1) ? 6 :
+                  0,
+                x: hSteps[i],
+                y: vSteps[j],
+                w: (i + 1 < hSteps.length ? hSteps[i + 1] : d.imageWidth) - hSteps[i],
+                h: (j + 1 < vSteps.length ? vSteps[j + 1] : d.imageHeight) - vSteps[j]
+              };
+            }
+          }
+
+          d.effectiveRegions.allocation[core] = coreChunks;
+        }
+
+        if (totalRows != totalSafeRows) {
+          console.log('Effectively used %d cores out of %d: SAP size exceeds region',
+            totalUsedCores, lineAllocCores * totalRows);
+        }
+      }
+
+    </script>
+  </body>
+</html>
