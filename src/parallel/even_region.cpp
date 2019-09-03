@@ -32,7 +32,7 @@ static void applyRegionBoundaries(const int imgW, const int imgH, parallel::Regi
 
             // Actual region dimensions, last of row/column must fit the complete image size
             int argW = (i + 1) % regionSpec.coresH() != 0 ? rgW : imgW - rgX;
-            int argH = (j + i) % regionSpec.coresV() != 0 ? rgH : imgH - rgY;
+            int argH = (j + 1) % regionSpec.coresV() != 0 ? rgH : imgH - rgY;
 
             regionSpec.data()[j * regionSpec.coresH() + i] = {rgX, rgY, argW, argH};
         }
@@ -77,7 +77,7 @@ parallel::RegionSpec parallel::calculateRegions(const int imgW, const int imgH, 
     if (invRatio) std::swap(w, h);
 
     RegionSpec baseRegions{cores, static_cast<int>(w), static_cast<int>(h)};
-    std::cerr << "[Region] Excess cores: " << baseRegions.excessCores();
+    std::cerr << "[Region] Excess cores: " << baseRegions.excessCores() << std::endl;
     applyRegionBoundaries(imgW, imgH, baseRegions);
     return baseRegions;
 }
