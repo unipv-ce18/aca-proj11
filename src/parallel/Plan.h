@@ -4,6 +4,7 @@
 #define MORPH_PLAN_H
 
 #include "RegionSpec.h"
+#include "CoreAllocation.h"
 
 namespace parallel {
 
@@ -14,16 +15,18 @@ namespace parallel {
         int cores_;
         int sap_;
         RegionSpec baseRegions_;
-        // effectiveRegions
+        CoreAllocation effectiveRegions_;
 
     public:
 
-        Plan(int imageWidth_, int imageHeight_, int cores_, int sap_, RegionSpec &&baseRegions_) :
-            imageWidth_(imageWidth_),
-            imageHeight_(imageHeight_),
-            cores_(cores_),
-            sap_(sap_),
-            baseRegions_(std::move(baseRegions_)) {}
+        Plan(int imageWidth, int imageHeight, int cores, int sap,
+             RegionSpec &&baseRegions, CoreAllocation &&effectiveRegions) :
+            imageWidth_(imageWidth),
+            imageHeight_(imageHeight),
+            cores_(cores),
+            sap_(sap),
+            baseRegions_(std::move(baseRegions)),
+            effectiveRegions_(std::move(effectiveRegions)) {}
 
         /// The width of the image this plan schedules for
         int imageWidth() const {
@@ -48,6 +51,11 @@ namespace parallel {
         /// Even allocation region data for non-SIMD execution
         RegionSpec &baseRegions() {
             return baseRegions_;
+        }
+
+        /// The effective chunk allocation for each core
+        CoreAllocation &effectiveRegions() {
+            return effectiveRegions_;
         }
 
     };
