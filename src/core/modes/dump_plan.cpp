@@ -3,6 +3,8 @@
 #include "../../parallel/planners.h"
 #include "../../parallel/ostream_dump.h"
 
+#include <iostream>
+
 void dumpPlanProc(int argc, char **argv) {
     if (argc < 6) {
         throw std::invalid_argument("Not enough arguments");
