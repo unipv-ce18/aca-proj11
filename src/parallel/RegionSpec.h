@@ -1,14 +1,12 @@
 #ifndef MORPH_REGIONSPEC_H
 #define MORPH_REGIONSPEC_H
 
+#include "Rect.h"
+
+#include <cstddef>
 #include <vector>
-#include <iostream>
 
 namespace parallel {
-
-    struct Rect {
-        int x, y, w, h;
-    };
 
     class RegionSpec {
 
@@ -25,7 +23,7 @@ namespace parallel {
             coresH_(coresH),
             coresV_(coresV),
             excessCores_(totalCores - coresH * coresV),
-            data_(static_cast<unsigned long long int>(coresH * coresV)) {}
+            data_(static_cast<size_t>(coresH * coresV)) {}
 
         /// Number of columns in this region grid
         int coresH() const {
