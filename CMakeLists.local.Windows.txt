@@ -1,0 +1,2 @@
+# Uncomment this for a custom OpenCV path
+#set(OpenCV_DIR C:\\Apps\\opencv\\build)
