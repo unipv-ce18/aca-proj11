@@ -16,14 +16,14 @@ cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl) {
 
             int val = 0;
 
-            for (int i = strEl.yMin(); i <= strEl.yMax(); ++i) {
-                for (int j = strEl.xMin(); j <= strEl.xMax(); ++j) {
+            for (int j = strEl.yMin(); j <= strEl.yMax(); ++j) {
+                for (int i = strEl.xMin(); i <= strEl.xMax(); ++i) {
                     int u = x + i;
                     int v = y + j;
 
                     if (v < 0 || v >= imSize.height) continue;
                     if (u < 0 || u >= imSize.width) continue;
-                    if (!strEl.isSet(i, j)) continue;
+                    if (!strEl.isSet(j, i)) continue;
 
                     int m = image.at<uint8_t>(v, u) + strEl.at(j, i);
                     if (m > val) val = m;
