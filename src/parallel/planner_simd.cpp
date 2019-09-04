@@ -170,15 +170,15 @@ static parallel::CoreAllocation assignCores(const std::vector<int> &hSteps, cons
         for (int j = chY; j < chY + chH; ++j) {
             for (int i = chX; i < chX + chW; ++i) {
                 int type =
-                    (i == 0 && j == 0) ? 1 :
-                    (i == numChunks - 1 && j == 0) ? 3 :
-                    (i == numChunks - 1 && j == vSteps.size() - 1) ? 5 :
-                    (i == 0 && j == vSteps.size() - 1) ? 7 :
-                    (i == 0) ? 8 :
-                    (i == numChunks - 1) ? 4 :
-                    (j == 0) ? 2 :
-                    (j == vSteps.size() - 1) ? 6 :
-                    0;
+                    (i == 0 && j == 0) ? CHUNK_NW :
+                    (i == numChunks - 1 && j == 0) ? CHUNK_NE :
+                    (i == numChunks - 1 && j == vSteps.size() - 1) ? CHUNK_SE :
+                    (i == 0 && j == vSteps.size() - 1) ? CHUNK_SW :
+                    (i == 0) ? CHUNK_W :
+                    (i == numChunks - 1) ? CHUNK_E :
+                    (j == 0) ? CHUNK_N :
+                    (j == vSteps.size() - 1) ? CHUNK_S :
+                    CHUNK_REGULAR;
                 coreChunks[(j - chY) * chW + i - chX] = {type, {
                     /* x */ hSteps[i],
                     /* y */ vSteps[j],

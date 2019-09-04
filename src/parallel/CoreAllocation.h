@@ -6,6 +6,16 @@
 #include <cstddef>
 #include <vector>
 
+#define CHUNK_REGULAR   0
+#define CHUNK_NW        1
+#define CHUNK_N         2
+#define CHUNK_NE        3
+#define CHUNK_E         4
+#define CHUNK_SE        5
+#define CHUNK_S         6
+#define CHUNK_SW        7
+#define CHUNK_W         8
+
 namespace parallel {
 
     struct Chunk {
@@ -24,13 +34,14 @@ namespace parallel {
 
         using gaps = std::vector<int>;
 
-        CoreAllocation(const gaps &hSteps, const gaps &vSteps, int coresH, int coresV, int totalCores, std::vector<std::vector<Chunk>> &&allocation)
-            : chunksH_(static_cast<int>(hSteps.size())),
-              chunksV_(static_cast<int>(vSteps.size())),
-              coresH_(coresH),
-              coresV_(coresV),
-              excessCores_(totalCores - static_cast<int>(allocation.size())),
-              allocation_(std::move(allocation)) {}
+        CoreAllocation(const gaps &hSteps, const gaps &vSteps, int coresH, int coresV, int totalCores,
+                       std::vector<std::vector<Chunk>> &&allocation)
+                : chunksH_(static_cast<int>(hSteps.size())),
+                  chunksV_(static_cast<int>(vSteps.size())),
+                  coresH_(coresH),
+                  coresV_(coresV),
+                  excessCores_(totalCores - static_cast<int>(allocation.size())),
+                  allocation_(std::move(allocation)) {}
 
         /// Total horizontal number of chunks
         int chunksH() const {
