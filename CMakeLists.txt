@@ -8,6 +8,7 @@ set(HEADERS
         src/core/modes/dilate.h
         src/core/modes/dump_plan.h
         src/core/modes/erode.h
+        src/morphology/dilate_parallel.h
         src/morphology/StrEl.h
         src/morphology/operators.h
         src/parallel/even_region.h
@@ -24,6 +25,7 @@ set(SOURCES
         src/core/modes/dilate.cpp
         src/core/modes/dump_plan.cpp
         src/core/modes/erode.cpp
+        src/morphology/dilate_parallel.cpp
         src/morphology/StrEl.cpp
         src/morphology/operators.cpp
         src/parallel/even_region.cpp

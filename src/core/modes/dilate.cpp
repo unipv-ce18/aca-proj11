@@ -1,7 +1,10 @@
 #include "dilate.h"
 
+#include "../../parallel/planners.h"
 #include "../../morphology/StrEl.h"
 #include "../../morphology/operators.h"
+#include "../../morphology/dilate_parallel.h"
+
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -23,10 +26,13 @@ void dilateProc(int argc, char **argv) {
     if (!image.data)
         throw std::runtime_error("Cannot load image to process");
 
+    parallel::Plan plan = parallel::planSimdExecution(4, image.size().width, image.size().height, (elem.size().width-1)/2);
+
     cv::Mat output;
     auto timeStart = std::chrono::steady_clock::now();
 
-    output = morph::dilate(image, elem);
+    //output = morph::dilate(image, elem);
+    output = dilateParallel(plan, image, elem);
 
     auto timeEnd = std::chrono::steady_clock::now();
     std::cerr << "Done in "
