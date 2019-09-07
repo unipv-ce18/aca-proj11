@@ -1,59 +1,3 @@
-// ----- AVX2 definitions -----
-#if defined(K_SIMD_TYPE_AVX2)
-
-#define SIMD_WIDTH 32
-typedef __m256i simdi_t;
-
-// 8-bit unsigned arithmetic, saturated
-#define simd_adds_epu8  _mm256_adds_epu8
-#define simd_subs_epu8  _mm256_subs_epu8
-
-// 8-bit unsigned comparison
-#define simd_max_epu8   _mm256_max_epu8
-#define simd_min_epu8   _mm256_min_epu8
-
-// 8-bit set1 broadcast
-#define simd_set1_epi8  _mm256_set1_epi8
-
-// 128 bit data load/store
-#define simd_loadu      _mm256_loadu_si256
-#define simd_storeu     _mm256_storeu_si256
-
-
-// ----- SSE2 definitions -----
-#elif defined(K_SIMD_TYPE_SSE2)
-
-#define SIMD_WIDTH 16
-typedef __m128i simdi_t;
-
-// 8-bit unsigned arithmetic, saturated
-#define simd_adds_epu8  _mm_adds_epu8
-#define simd_subs_epu8  _mm_subs_epu8
-
-// 8-bit unsigned comparison
-#define simd_max_epu8   _mm_max_epu8
-#define simd_min_epu8   _mm_min_epu8
-
-// 8-bit set1 broadcast
-#define simd_set1_epi8  _mm_set1_epi8
-
-// 128 bit data load/store
-#define simd_loadu      _mm_loadu_si128
-#define simd_storeu     _mm_storeu_si128
-
-
-// ----- No SIMD support -----
-#else
-
-// Ensure SIMD is not enabled
-#undef SIMD_WIDTH
-
-#endif
-
-
-
-// ----- The algorithm itself -----
-
 // Outer pixel loop
 #ifdef SIMD_WIDTH
 assert(ch.rect.w == SIMD_WIDTH);
@@ -140,6 +84,4 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 
 #undef K_METHOD_DILATE
 #undef K_METHOD_ERODE
-#undef K_SIMD_TYPE_SSE2
-#undef K_SIMD_TYPE_AVX2
 #undef K_ENABLE_BORDER_CHECKS

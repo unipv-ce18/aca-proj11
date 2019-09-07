@@ -37,17 +37,30 @@ set(SOURCES
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
 option(MORPH_ENABLE_SIMD_AVX2 "Enable AVX2 support" OFF)
+option(MORPH_ENABLE_SIMD_AVX512F "Enable AVX512F support" OFF)
 
 # Site-local configuration
 include(CMakeLists.local.txt OPTIONAL)
 
 # Compiler configuration
-if (MORPH_ENABLE_SIMD_AVX2)
+if (MORPH_ENABLE_SIMD_AVX512F)
+    if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+        add_compile_options(-mavx512f)
+    elseif (CMAKE_CXX_COMPILER_ID_MATCHES "MSVC")
+        add_compile_options(/arch:AVX512F)
+    endif ()
+    add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
+    add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
+    add_compile_definitions(MORPH_ENABLE_SIMD_AVX512F)
+    message(STATUS "Morph: Using AVX512F instruction set")
+
+elseif (MORPH_ENABLE_SIMD_AVX2)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         add_compile_options(-mavx2)
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         add_compile_options(/arch:AVX2)
     endif ()
+    add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
     message(STATUS "Morph: Using AVX2 instruction set")
 
