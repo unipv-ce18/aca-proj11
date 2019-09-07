@@ -5,14 +5,12 @@
 #include "../../morphology/operators.h"
 #include "../../morphology/dilate_parallel.h"
 
-
-#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 #include <chrono>
 #include <iostream>
 
-void dilateProc(int argc, char **argv) {
+void dilateProc(int argc, char *argv[]) {
     if (argc < 4) {
         throw std::invalid_argument("Not enough arguments");
     }

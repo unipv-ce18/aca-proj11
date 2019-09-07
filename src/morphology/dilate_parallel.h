@@ -3,9 +3,8 @@
 
 #include <opencv2/core/mat.hpp>
 
-namespace parallel {
-    class Plan;
-}
+// Forward declarations
+namespace parallel { class Plan; }
 class StrEl;
 
 cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl);

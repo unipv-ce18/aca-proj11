@@ -9,8 +9,9 @@ set(HEADERS
         src/core/modes/dump_plan.h
         src/core/modes/erode.h
         src/morphology/dilate_parallel.h
-        src/morphology/StrEl.h
+        src/morphology/kernels.h
         src/morphology/operators.h
+        src/morphology/StrEl.h
         src/parallel/Chunk.h
         src/parallel/even_region.h
         src/parallel/ostream_dump.h
@@ -47,6 +48,7 @@ if (MORPH_ENABLE_SIMD_AVX2)
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         add_compile_options(/arch:AVX2)
     endif ()
+    add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
     message(STATUS "Morph: Using AVX2 instruction set")
 
 elseif (MORPH_ENABLE_SIMD_SSE2)
@@ -55,6 +57,7 @@ elseif (MORPH_ENABLE_SIMD_SSE2)
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         add_compile_options(/arch:SSE2)
     endif ()
+    add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     message(STATUS "Morph: Using SSE2 instruction set")
 
 else ()
