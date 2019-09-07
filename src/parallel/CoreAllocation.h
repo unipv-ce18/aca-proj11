@@ -1,27 +1,12 @@
 #ifndef MORPH_COREALLOCATION_H
 #define MORPH_COREALLOCATION_H
 
-#include "Rect.h"
+#include "Chunk.h"
 
 #include <cstddef>
 #include <vector>
 
-#define CHUNK_REGULAR   0
-#define CHUNK_NW        1
-#define CHUNK_N         2
-#define CHUNK_NE        3
-#define CHUNK_E         4
-#define CHUNK_SE        5
-#define CHUNK_S         6
-#define CHUNK_SW        7
-#define CHUNK_W         8
-
 namespace parallel {
-
-    struct Chunk {
-        int type;
-        Rect rect;
-    };
 
     class CoreAllocation {
 

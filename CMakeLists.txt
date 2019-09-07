@@ -11,6 +11,7 @@ set(HEADERS
         src/morphology/dilate_parallel.h
         src/morphology/StrEl.h
         src/morphology/operators.h
+        src/parallel/Chunk.h
         src/parallel/even_region.h
         src/parallel/ostream_dump.h
         src/parallel/Plan.h
