@@ -4,6 +4,7 @@ project(aca_project CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 set(HEADERS
+        src/capabilities.h
         src/core/modes.h
         src/core/modes/dilate.h
         src/core/modes/dump_plan.h
@@ -23,6 +24,7 @@ set(HEADERS
 
 set(SOURCES
         src/morph.cpp
+        src/capabilities.cpp
         src/core/modes.cpp
         src/core/modes/dilate.cpp
         src/core/modes/dump_plan.cpp
