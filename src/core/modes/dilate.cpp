@@ -4,8 +4,11 @@
 #include "../../parallel/planners.h"
 #include "../../morphology/StrEl.h"
 #include "../../morphology/operators.h"
-#include "../../morphology/dilate_parallel.h"
+#include "../../morphology/operator_types.h"
 #include "../../simd_props.h"
+
+// We need to include this to let this compilation unit generate the right version of the method
+#include "../../morphology/process_parallel.tcc"
 
 #include <opencv2/highgui/highgui.hpp>
 
@@ -37,7 +40,7 @@ void dilateProc(int argc, char *argv[]) {
     auto timeStart = std::chrono::steady_clock::now();
 
     //output = morph::dilate(image, elem);
-    output = dilateParallel(plan, image, elem, conf.simdWidth==DEFAULT_BLOCK_WIDTH);
+    output = processParallel<Dilate>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
 
     auto timeEnd = std::chrono::steady_clock::now();
     std::cerr << "Done in "

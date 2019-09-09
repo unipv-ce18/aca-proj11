@@ -1,4 +1,7 @@
-#include "dilate_parallel.h"
+#ifndef MORPH_PROCESS_PARALLEL_TCC
+#define MORPH_PROCESS_PARALLEL_TCC
+
+#include "process_parallel.h"
 
 #include "kernels.h"
 #include "../parallel/Plan.h"
@@ -7,7 +10,8 @@
 
 #include <omp.h>
 
-cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl, const bool noSimd) {
+template<typename Operator>
+cv::Mat processParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl, const bool noSimd) {
     const auto &alloc = plan.effectiveRegions().allocation();
 
     assert(image.type() == CV_8UC1);
@@ -22,34 +26,34 @@ cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &
         for (const auto &ch : alloc[core]) {
             switch (ch.type) {
                 case CHUNK_REGULAR:
-                    if (noSimd){
-                        _k_dilate_single(out, image, strEl, ch);
+                    if (noSimd) {
+                        _k_single<Operator>(out, image, strEl, ch);
                         continue;
                     }
 
-                    switch (ch.rect.w){
+                    switch (ch.rect.w) {
 #ifdef MORPH_ENABLE_SIMD_AVX512F
                         case SIMD_WIDTH_AVX512F:
-                            _k_dilate_avx512f(out, image, strEl, ch);
+                            _k_avx512f<Operator>(out, image, strEl, ch);
                             break;
 #endif
 #ifdef MORPH_ENABLE_SIMD_AVX2
                         case SIMD_WIDTH_AVX2:
-                            _k_dilate_avx2(out, image, strEl,ch);
+                            _k_avx2<Operator>(out, image, strEl,ch);
                             break;
 #endif
 #ifdef MORPH_ENABLE_SIMD_SSE2
                         case SIMD_WIDTH_SSE2:
-                            _k_dilate_sse2(out, image, strEl, ch);
+                            _k_sse2<Operator>(out, image, strEl, ch);
                             break;
 #endif
                         default:
-                            _k_dilate_single(out, image, strEl, ch);
+                            _k_single<Operator>(out, image, strEl, ch);
                     }
 
                     break;
                 default:
-                    _k_dilate_safe(out, image, strEl, ch);
+                    _k_safe<Operator>(out, image, strEl, ch);
                     break;
             }
         }
@@ -57,3 +61,5 @@ cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &
 
     return out;
 }
+
+#endif //MORPH_PROCESS_PARALLEL_TCC

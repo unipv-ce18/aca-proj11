@@ -4,11 +4,17 @@
 #include <immintrin.h>
 #include <opencv2/core/mat.hpp>
 
+#include "operator_types.h"
 #include "../parallel/Chunk.h"
 #include "StrEl.h"
 
+#define KERN_PARAMS cv::Mat &out, const cv::Mat &src, const StrEl &strEl, const parallel::Chunk &ch
+
+#define KERN_METHOD_DEF(var) \
+    template<typename Operator> inline void _k_##var(KERN_PARAMS)
+
 #define KERN_METHOD(op, var) \
-    inline void _k_##op##_##var(cv::Mat &out, const cv::Mat &src, const StrEl &strEl, const parallel::Chunk &ch)
+    template<> inline void _k_##var<op>(KERN_PARAMS)
 
 namespace morph {
     namespace kern {
@@ -16,24 +22,28 @@ namespace morph {
 // Ensure SIMD is disabled
 #undef SIMD_WIDTH
 
-        KERN_METHOD(dilate, safe) {
+        KERN_METHOD_DEF(safe);
+
+        KERN_METHOD(Dilate, safe) {
 #define K_METHOD_DILATE
 #define K_ENABLE_BORDER_CHECKS
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(erode, safe) {
+        KERN_METHOD(Erode, safe) {
 #define K_METHOD_ERODE
 #define K_ENABLE_BORDER_CHECKS
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(dilate, single) {
+        KERN_METHOD_DEF(single);
+
+        KERN_METHOD(Dilate, single) {
 #define K_METHOD_DILATE
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(erode, single) {
+        KERN_METHOD(Erode, single) {
 #define K_METHOD_ERODE
 #include "kern_sched_cpu.inl"
         }
@@ -44,12 +54,14 @@ namespace morph {
 #ifdef MORPH_ENABLE_SIMD_SSE2
 #include "simddefs.sse2.inl"
 
-        KERN_METHOD(dilate, sse2) {
+        KERN_METHOD_DEF(sse2);
+
+        KERN_METHOD(Dilate, sse2) {
 #define K_METHOD_DILATE
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(erode, sse2) {
+        KERN_METHOD(Erode, sse2) {
 #define K_METHOD_ERODE
 #include "kern_sched_cpu.inl"
         }
@@ -63,12 +75,14 @@ namespace morph {
 #ifdef MORPH_ENABLE_SIMD_AVX2
 #include "simddefs.avx2.inl"
 
-        KERN_METHOD(dilate, avx2) {
+        KERN_METHOD_DEF(avx2);
+
+        KERN_METHOD(Dilate, avx2) {
 #define K_METHOD_DILATE
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(erode, avx2) {
+        KERN_METHOD(Erode, avx2) {
 #define K_METHOD_ERODE
 #include "kern_sched_cpu.inl"
         }
@@ -82,12 +96,14 @@ namespace morph {
 #ifdef MORPH_ENABLE_SIMD_AVX512F
 #include "simddefs.avx512f.inl"
 
-        KERN_METHOD(dilate, avx512f) {
+        KERN_METHOD_DEF(avx512f);
+
+        KERN_METHOD(Dilate, avx512f) {
 #define K_METHOD_DILATE
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(erode, avx512f) {
+        KERN_METHOD(Erode, avx512f) {
 #define K_METHOD_ERODE
 #include "kern_sched_cpu.inl"
         }
