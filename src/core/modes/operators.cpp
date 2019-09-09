@@ -1,9 +1,9 @@
-#include "dilate.h"
+#include "operators.h"
 
 #include "../../capabilities.h"
 #include "../../parallel/planners.h"
 #include "../../morphology/StrEl.h"
-#include "../../morphology/operators.h"
+#include "../../morphology/reference.h"
 #include "../../morphology/operator_types.h"
 #include "../../simd_props.h"
 
@@ -15,9 +15,12 @@
 #include <chrono>
 #include <iostream>
 
+#define OPERATOR_DILATE 1
+#define OPERATOR_ERODE  2
+
 #define BLOCK_WIDTH_NO_SIMD 32
 
-void dilateProc(int argc, char *argv[]) {
+static void operProcCommon(int op, int argc, char *argv[]) {
     if (argc < 4) {
         throw std::invalid_argument("Not enough arguments");
     }
@@ -39,8 +42,17 @@ void dilateProc(int argc, char *argv[]) {
     cv::Mat output;
     auto timeStart = std::chrono::steady_clock::now();
 
-    //output = morph::dilate(image, elem);
-    output = processParallel<Dilate>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+    switch (op) {
+        case OPERATOR_DILATE:
+            //output = morph::dilate(image, elem);
+            output = processParallel<Dilate>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            break;
+        case OPERATOR_ERODE:
+            output = processParallel<Erode>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            break;
+        default:
+            throw std::runtime_error("Unknown internal operation mode");
+    }
 
     auto timeEnd = std::chrono::steady_clock::now();
     std::cerr << "Done in "
@@ -55,4 +67,12 @@ void dilateProc(int argc, char *argv[]) {
     } else {
         cv::imwrite(argv[4], output);
     }
+}
+
+void dilateProc(int argc, char **argv) {
+    operProcCommon(OPERATOR_DILATE, argc, argv);
+}
+
+void erodeProc(int argc, char **argv) {
+    operProcCommon(OPERATOR_ERODE, argc, argv);
 }

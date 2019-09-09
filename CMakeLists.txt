@@ -7,12 +7,11 @@ set(HEADERS
         src/capabilities.h
         src/simd_props.h
         src/core/modes.h
-        src/core/modes/dilate.h
+        src/core/modes/operators.h
         src/core/modes/dump_plan.h
-        src/core/modes/erode.h
         src/morphology/process_parallel.h
         src/morphology/kernels.h
-        src/morphology/operators.h
+        src/morphology/reference.h
         src/morphology/operator_types.h
         src/morphology/StrEl.h
         src/parallel/Chunk.h
@@ -28,11 +27,10 @@ set(SOURCES
         src/morph.cpp
         src/capabilities.cpp
         src/core/modes.cpp
-        src/core/modes/dilate.cpp
+        src/core/modes/operators.cpp
         src/core/modes/dump_plan.cpp
-        src/core/modes/erode.cpp
         src/morphology/StrEl.cpp
-        src/morphology/operators.cpp
+        src/morphology/reference_dilate.cpp
         src/parallel/even_region.cpp
         src/parallel/ostream_dump_json.cpp
         src/parallel/planner_simd.cpp)

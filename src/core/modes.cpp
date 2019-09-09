@@ -1,6 +1,5 @@
 #include "modes.h"
-#include "modes/dilate.h"
-#include "modes/erode.h"
+#include "modes/operators.h"
 #include "modes/dump_plan.h"
 
 #include <iostream>

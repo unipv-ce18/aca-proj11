@@ -3,4 +3,6 @@
 
 void dilateProc(int argc, char *argv[]);
 
+void erodeProc(int argc, char *argv[]);
+
 #endif //MORPH_MODE_DILATE_H
