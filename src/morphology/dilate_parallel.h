@@ -7,6 +7,6 @@
 namespace parallel { class Plan; }
 class StrEl;
 
-cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl);
+cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl, const bool noSimd);
 
 #endif //MORPH_DILATE_PARALLEL_H

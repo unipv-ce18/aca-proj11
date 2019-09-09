@@ -1,14 +1,18 @@
 #include "dilate.h"
 
+#include "../../capabilities.h"
 #include "../../parallel/planners.h"
 #include "../../morphology/StrEl.h"
 #include "../../morphology/operators.h"
 #include "../../morphology/dilate_parallel.h"
+#include "../../simd_props.h"
 
 #include <opencv2/highgui/highgui.hpp>
 
 #include <chrono>
 #include <iostream>
+
+#define BLOCK_WIDTH_NO_SIMD 32
 
 void dilateProc(int argc, char *argv[]) {
     if (argc < 4) {
@@ -24,13 +28,16 @@ void dilateProc(int argc, char *argv[]) {
     if (!image.data)
         throw std::runtime_error("Cannot load image to process");
 
-    parallel::Plan plan = parallel::planSimdExecution(4, image.size().width, image.size().height, (elem.size().width-1)/2);
+    ParallelConfig conf = makeParallelConfig();
+    std::cerr << "Using " << conf.numCores << " cores (" << conf.simdWidth << " simd pixels)\n";
+    parallel::Plan plan = parallel::planSimdExecution(conf.numCores, conf.simdWidth == DEFAULT_BLOCK_WIDTH ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
+            image.size().width, image.size().height, (elem.size().width-1)/2);
 
     cv::Mat output;
     auto timeStart = std::chrono::steady_clock::now();
 
     //output = morph::dilate(image, elem);
-    output = dilateParallel(plan, image, elem);
+    output = dilateParallel(plan, image, elem, conf.simdWidth==DEFAULT_BLOCK_WIDTH);
 
     auto timeEnd = std::chrono::steady_clock::now();
     std::cerr << "Done in "

@@ -1,5 +1,4 @@
 #include "core/modes.h"
-#include "capabilities.h"
 
 #include <algorithm>
 #include <iostream>
@@ -22,8 +21,6 @@ int main(int argc, char *argv[]) {
     }
 
     try {
-        ParallelConfig conf = makeParallelConfig();
-        std::cerr << "Using " << conf.numCores << " cores (" << conf.simdWidth << " simd pixels)\n";
         modeProc(argc, argv);
 
     } catch (const std::invalid_argument &ex) {

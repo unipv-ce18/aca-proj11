@@ -7,16 +7,15 @@
 #include <memory>
 #include <iostream>
 
-#define SIMD_WIDTH 64
 #define MAX_CHUNK_HEIGHT 32
 
-static std::vector<int> calcColumnSplits(int imgW, int sap) {
+static std::vector<int> calcColumnSplits(int imgW, int sap, int simdWidth) {
     int safeWidth = imgW - 2 * sap;
-    int lastChunkWidth = safeWidth % SIMD_WIDTH;
+    int lastChunkWidth = safeWidth % simdWidth;
 
     // (could simplify to integer division)
     int numChunks = 2 + (lastChunkWidth == 0 ? 0 : 1) +
-                    static_cast<int>(std::floor(static_cast<float>(safeWidth) / SIMD_WIDTH));
+                    static_cast<int>(std::floor(static_cast<float>(safeWidth) / simdWidth));
 
     std::vector<int> hSteps(static_cast<size_t>(numChunks));
 
@@ -26,7 +25,7 @@ static std::vector<int> calcColumnSplits(int imgW, int sap) {
         else if (i == numChunks - 1)  // Last "unsafe area" chunk
             hSteps[i] = imgW - sap;
         else
-            hSteps[i] = sap + (i - 1) * SIMD_WIDTH;
+            hSteps[i] = sap + (i - 1) * simdWidth;
     }
 
     return hSteps;
@@ -195,10 +194,10 @@ static parallel::CoreAllocation assignCores(const std::vector<int> &hSteps, cons
     return {hSteps, vSteps, coresH, coresV, totalCores, std::move(allocation)};
 }
 
-parallel::Plan parallel::planSimdExecution(int cores, int imgW, int imgH, int sap) {
+parallel::Plan parallel::planSimdExecution(int cores, int simdWidth, int imgW, int imgH, int sap) {
     RegionSpec rs = calculateRegions(imgW, imgH, cores);
 
-    std::vector<int> hSteps = calcColumnSplits(imgW, sap);
+    std::vector<int> hSteps = calcColumnSplits(imgW, sap, simdWidth);
     int numChunks = static_cast<int>(hSteps.size());
 
     // # of columns processed by a single core

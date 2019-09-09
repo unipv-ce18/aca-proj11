@@ -17,7 +17,7 @@ void dumpPlanProc(int argc, char **argv) {
         int cores = std::stoi(argv[5]);
 
         std::cerr << "Planning for " << imgW << 'x' << imgH << " (sap " << sap << "), " << cores << " cores\n";
-        parallel::Plan p = parallel::planSimdExecution(cores, imgW, imgH, sap);
+        parallel::Plan p = parallel::planSimdExecution(cores, 32, imgW, imgH, sap);
 
         using namespace parallel::print_format_json;
         std::cout << p << std::endl;

@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(HEADERS
         src/capabilities.h
+        src/simd_props.h
         src/core/modes.h
         src/core/modes/dilate.h
         src/core/modes/dump_plan.h

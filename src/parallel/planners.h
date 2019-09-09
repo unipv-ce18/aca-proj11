@@ -12,12 +12,13 @@ namespace parallel {
      * Generates a parallel execution plan optimized for the enabled SIMD processor extensions.
      *
      * @param cores The number of cores to plan for
+     * @param simdWidth The preferred width of a chunk
      * @param imgW The image width
      * @param imgH The image height
      * @param sap Distance from the border from where the execution is safe
      * @return The built execution plan
      */
-    Plan planSimdExecution(int cores, int imgW, int imgH, int sap);
+    Plan planSimdExecution(int cores, int simdWidth, int imgW, int imgH, int sap);
 
 }
 

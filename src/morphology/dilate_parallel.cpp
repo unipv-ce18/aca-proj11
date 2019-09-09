@@ -3,10 +3,11 @@
 #include "kernels.h"
 #include "../parallel/Plan.h"
 #include "StrEl.h"
+#include "../simd_props.h"
 
 #include <omp.h>
 
-cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl) {
+cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &strEl, const bool noSimd) {
     const auto &alloc = plan.effectiveRegions().allocation();
 
     assert(image.type() == CV_8UC1);
@@ -21,10 +22,31 @@ cv::Mat dilateParallel(parallel::Plan &plan, const cv::Mat &image, const StrEl &
         for (const auto &ch : alloc[core]) {
             switch (ch.type) {
                 case CHUNK_REGULAR:
-                    if (ch.rect.w == 16)
-                        _k_dilate_sse2(out, image, strEl, ch);
-                    else
+                    if (noSimd){
                         _k_dilate_single(out, image, strEl, ch);
+                        continue;
+                    }
+
+                    switch (ch.rect.w){
+#ifdef MORPH_ENABLE_SIMD_AVX512F
+                        case SIMD_WIDTH_AVX512F:
+                            _k_dilate_avx512f(out, image, strEl, ch);
+                            break;
+#endif
+#ifdef MORPH_ENABLE_SIMD_AVX2
+                        case SIMD_WIDTH_AVX2:
+                            _k_dilate_avx2(out, image, strEl,ch);
+                            break;
+#endif
+#ifdef MORPH_ENABLE_SIMD_SSE2
+                        case SIMD_WIDTH_SSE2:
+                            _k_dilate_sse2(out, image, strEl, ch);
+                            break;
+#endif
+                        default:
+                            _k_dilate_single(out, image, strEl, ch);
+                    }
+
                     break;
                 default:
                     _k_dilate_safe(out, image, strEl, ch);
