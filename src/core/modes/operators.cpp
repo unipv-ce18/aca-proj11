@@ -33,22 +33,24 @@ static void operProcCommon(int op, int argc, char *argv[]) {
     cv::Mat image = cv::imread(argv[3], cv::IMREAD_GRAYSCALE);
     if (!image.data)
         throw std::runtime_error("Cannot load image to process");
+    assert(image.type() == CV_8UC1);
 
     ParallelConfig conf = makeParallelConfig();
     std::cerr << "Using " << conf.numCores << " cores (" << conf.simdWidth << " simd pixels)\n";
     parallel::Plan plan = parallel::planSimdExecution(conf.numCores, conf.simdWidth == DEFAULT_BLOCK_WIDTH ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
             image.size().width, image.size().height, (elem.size().width-1)/2);
 
-    cv::Mat output;
+    cv::Mat output(image.size(), CV_8UC1);
+
     auto timeStart = std::chrono::steady_clock::now();
 
     switch (op) {
         case OPERATOR_DILATE:
             //output = morph::dilate(image, elem);
-            output = processParallel<Dilate>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            processParallel<Dilate>(plan, { output, image, elem }, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
             break;
         case OPERATOR_ERODE:
-            output = processParallel<Erode>(plan, image, elem, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            processParallel<Erode>(plan, { output, image, elem }, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
             break;
         default:
             throw std::runtime_error("Unknown internal operation mode");

@@ -1,3 +1,22 @@
+// Argument mapping
+#if defined(K_METHOD_DILATE) || defined(K_METHOD_ERODE)
+cv::Mat &out = args.out;
+cv::Mat const &src = args.src;
+StrEl const &strEl = args.strEl;
+
+#elif defined(K_METHOD_SKELPART)
+// SkelIter algorithm implies dilation(nxI, strEl) -> skel; skel is then processed further
+#define K_METHOD_DILATE
+cv::Mat &out = args.skel;
+cv::Mat const &src = args.nxImg;
+StrEl const &strEl = args.strEl;
+
+cv::Mat const &img = args.img;
+
+#endif
+
+
+
 // Outer pixel loop
 #ifdef SIMD_WIDTH
 assert(ch.rect.w == SIMD_WIDTH);
@@ -69,6 +88,25 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
         }
     }
 
+    // If this operator is SkelPart, perform additional steps before storing
+#ifdef K_METHOD_SKELPART
+#ifndef SIMD_WIDTH
+    // "out" is actually "skel" to update
+    uint8_t skelPx = out.at<uint8_t>(y, x);
+    uint8_t imgDiff = img.at<uint8_t>(y, x) - val;
+    val = skelPx > imgDiff ? skelPx : imgDiff;  // max
+#else
+    val = simd_max_epu8(
+            simd_loadu(reinterpret_cast<const simdi_t *>(out.ptr(y) + x)),
+            simd_subs_epu8(
+                simd_loadu(reinterpret_cast<const simdi_t *>(img.ptr(y) + x)),
+                val
+            )
+    );
+#endif
+#endif
+
+
     // Store result
 #ifndef SIMD_WIDTH
     out.at<uint8_t>(y, x) = static_cast<uint8_t>(
@@ -90,4 +128,5 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 
 #undef K_METHOD_DILATE
 #undef K_METHOD_ERODE
+#undef K_METHOD_SKELPART
 #undef K_ENABLE_BORDER_CHECKS

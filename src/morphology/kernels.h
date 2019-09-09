@@ -1,26 +1,28 @@
 #ifndef MORPH_KERNELS_H
 #define MORPH_KERNELS_H
 
-#include <immintrin.h>
-#include <opencv2/core/mat.hpp>
-
 #include "operator_types.h"
 #include "../parallel/Chunk.h"
 #include "StrEl.h"
 
-#define KERN_PARAMS cv::Mat &out, const cv::Mat &src, const StrEl &strEl, const parallel::Chunk &ch
+#include <immintrin.h>
+#include <opencv2/core/mat.hpp>
 
 #define KERN_METHOD_DEF(var) \
-    template<typename Operator> inline void _k_##var(KERN_PARAMS)
+    template<typename Operator> \
+    inline void _kernel_##var(typename KernelParams<Operator>::type &args, const parallel::Chunk &ch)
 
 #define KERN_METHOD(op, var) \
-    template<> inline void _k_##var<op>(KERN_PARAMS)
+    template<> inline void _kernel_##var<op>(typename KernelParams<op>::type &args, const parallel::Chunk &ch)
 
 namespace morph {
     namespace kern {
 
 // Ensure SIMD is disabled
 #undef SIMD_WIDTH
+
+
+// ----- "safe" kernels with border checks -----
 
         KERN_METHOD_DEF(safe);
 
@@ -36,6 +38,15 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(SkelIter, safe) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+
+// ----- Non-SIMD (single-pixel) kernels -----
+
         KERN_METHOD_DEF(single);
 
         KERN_METHOD(Dilate, single) {
@@ -45,6 +56,11 @@ namespace morph {
 
         KERN_METHOD(Erode, single) {
 #define K_METHOD_ERODE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(SkelIter, single) {
+#define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
 
@@ -63,6 +79,11 @@ namespace morph {
 
         KERN_METHOD(Erode, sse2) {
 #define K_METHOD_ERODE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(SkelIter, sse2) {
+#define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
 
@@ -87,6 +108,11 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(SkelIter, avx2) {
+#define K_METHOD_SKELPART
+#include "kern_sched_cpu.inl"
+        }
+
 #include "simddefs_clear.inl"
 #endif
 
@@ -105,6 +131,11 @@ namespace morph {
 
         KERN_METHOD(Erode, avx512f) {
 #define K_METHOD_ERODE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(SkelPart, avx512f) {
+#define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
 
