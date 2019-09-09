@@ -9,12 +9,18 @@ for (int y = ch.rect.y; y < ch.rect.y + ch.rect.h; ++y) {
 for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #endif
 
-    // Initialize accumulator
-#ifdef SIMD_WIDTH
-    simdi_t val = simd_set1_epi8(0);
-#else
-    int val = 0;
+// Initialize accumulator
+#if defined(K_METHOD_DILATE)
+#define __INIT_VAL 0
+#elif defined(K_METHOD_ERODE)
+#define __INIT_VAL 255
 #endif
+#ifndef SIMD_WIDTH
+    int val = __INIT_VAL;
+#else
+    simdi_t val = simd_set1_epi8(__INIT_VAL);
+#endif
+#undef __INIT_VAL
 
     // Inner structural element pixel loop
     for (int j = strEl.yMin(); j <= strEl.yMax(); ++j) {
