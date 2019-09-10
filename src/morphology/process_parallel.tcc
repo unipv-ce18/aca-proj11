@@ -1,6 +1,3 @@
-#ifndef MORPH_PROCESS_PARALLEL_TCC
-#define MORPH_PROCESS_PARALLEL_TCC
-
 #include "process_parallel.h"
 
 #include "kernels.h"
@@ -10,7 +7,7 @@
 
 #include <omp.h>
 
-template<typename Operator, typename OpArgs = typename KernelParams<Operator>::type>
+template<typename Operator, typename OpArgs>
 void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
     const auto &alloc = plan.effectiveRegions().allocation();
 
@@ -56,5 +53,3 @@ void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
         }
     }
 }
-
-#endif //MORPH_PROCESS_PARALLEL_TCC

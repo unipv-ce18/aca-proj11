@@ -5,18 +5,17 @@
 #include "../../morphology/StrEl.h"
 #include "../../morphology/reference.h"
 #include "../../morphology/operator_types.h"
+#include "../../morphology/process_parallel.h"
 #include "../../simd_props.h"
-
-// We need to include this to let this compilation unit generate the right version of the method
-#include "../../morphology/process_parallel.tcc"
 
 #include <opencv2/highgui/highgui.hpp>
 
 #include <chrono>
 #include <iostream>
 
-#define OPERATOR_DILATE 1
-#define OPERATOR_ERODE  2
+#define OPERATOR_DILATE     1
+#define OPERATOR_ERODE      2
+#define OPERATOR_SKELETON   3
 
 #define BLOCK_WIDTH_NO_SIMD 32
 
@@ -44,14 +43,29 @@ static void operProcCommon(int op, int argc, char *argv[]) {
 
     auto timeStart = std::chrono::steady_clock::now();
 
+    bool noSimd = conf.simdWidth == DEFAULT_BLOCK_WIDTH;
+
+    cv::Mat image2(image.size(),CV_8UC1);
+
     switch (op) {
         case OPERATOR_DILATE:
             //output = morph::dilate(image, elem);
-            processParallel<Dilate>(plan, { output, image, elem }, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            processParallel<Dilate>(plan, { output, image, elem }, noSimd);
             break;
         case OPERATOR_ERODE:
-            processParallel<Erode>(plan, { output, image, elem }, conf.simdWidth == DEFAULT_BLOCK_WIDTH);
+            processParallel<Erode>(plan, { output, image, elem }, noSimd);
             break;
+        case OPERATOR_SKELETON: {
+            cv::Mat *I = &image;
+            cv::Mat *nxI = &image2;
+
+            for (int i = 0; i < 20; ++i) {
+                processParallel<Erode>(plan, {*nxI, *I, elem}, noSimd);
+                processParallel<SkelIter>(plan, {output, *nxI, elem, *I}, noSimd);
+                std::swap(I, nxI);
+            }
+            break;
+        }
         default:
             throw std::runtime_error("Unknown internal operation mode");
     }
@@ -77,4 +91,7 @@ void dilateProc(int argc, char **argv) {
 
 void erodeProc(int argc, char **argv) {
     operProcCommon(OPERATOR_ERODE, argc, argv);
+}
+void skeletonProc(int argc, char **argv) {
+    operProcCommon(OPERATOR_SKELETON, argc, argv);
 }
