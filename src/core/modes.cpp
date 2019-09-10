@@ -38,7 +38,7 @@ void printUsage(const char *execStr) {
               << "\n"
               << "Environment variables:\n"
               << "  MORPH_THREADS\n"
-                 "The number of threads to execute (defaults to number of CPU cores)\n"
-              << "MORPH_SIMD\n"
-                 "One of \"SSE2\", \"AVX2\", \"AVX512\" or \"none\" for kernel selection\n";
+                 "    The number of threads to execute (defaults to number of CPU cores)\n"
+              << "  MORPH_SIMD\n"
+                 "    One of \"SSE2\", \"AVX2\", \"AVX512\" or \"none\" for kernel selection\n";
 }

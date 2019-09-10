@@ -8,6 +8,8 @@
 #include <immintrin.h>
 #include <opencv2/core/mat.hpp>
 
+#include <cassert>
+
 #define KERN_METHOD_DEF(var) \
     template<typename Operator> \
     inline void _kernel_##var(typename KernelParams<Operator>::type &args, const parallel::Chunk &ch)
