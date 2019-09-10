@@ -136,7 +136,7 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
-        KERN_METHOD(SkelPart, avx512f) {
+        KERN_METHOD(SkelIter, avx512f) {
 #define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }

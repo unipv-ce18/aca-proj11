@@ -37,8 +37,8 @@ set(SOURCES
 
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
-option(MORPH_ENABLE_SIMD_AVX2 "Enable AVX2 support" OFF)
-option(MORPH_ENABLE_SIMD_AVX512F "Enable AVX512F support" OFF)
+option(MORPH_ENABLE_SIMD_AVX2 "Enable AVX2 support" ON)
+option(MORPH_ENABLE_SIMD_AVX512F "Enable AVX512F support" ON)
 
 # Debugging console output
 option(MORPH_DEBUG_PLANNER "Enable debug messages for parallel planner" OFF)
@@ -49,9 +49,9 @@ include(CMakeLists.local.txt OPTIONAL)
 # Compiler configuration
 if (MORPH_ENABLE_SIMD_AVX512F)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-        add_compile_options(-mavx512f)
+        add_compile_options(-mavx512f -mavx512bw)
     elseif (CMAKE_CXX_COMPILER_ID_MATCHES "MSVC")
-        add_compile_options(/arch:AVX512F)
+        add_compile_options(/arch:AVX512F /arch:AVX512BW)
     endif ()
     add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
