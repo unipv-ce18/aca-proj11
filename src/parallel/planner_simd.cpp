@@ -5,7 +5,13 @@
 
 #include <cmath>
 #include <memory>
+
+#ifdef MORPH_DEBUG_PLANNER
 #include <iostream>
+#define DEBUG_PRINT(fmt, ...)   std::fprintf(stderr, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_PRINT(fmt, ...)
+#endif
 
 #define MAX_CHUNK_HEIGHT 32
 
@@ -33,19 +39,20 @@ static std::vector<int> calcColumnSplits(int imgW, int sap, int simdWidth) {
 
 static int computeAdditionalRowCount(const parallel::RegionSpec &rs, int lineAllocCores) {
     int lineExcessCores = rs.coresH() - lineAllocCores;
-    std::fprintf(stderr, "Chunk line excess cores: %d\n", lineExcessCores);
+    DEBUG_PRINT("Chunk line excess cores: %d\n", lineExcessCores);
 
     int totalExcessCores = rs.excessCores() + lineExcessCores * rs.coresV();
-    std::fprintf(stderr, "Total excess cores: %d + %d * %d = %d\n",
+    DEBUG_PRINT("Total excess cores: %d + %d * %d = %d\n",
                  rs.excessCores(), lineExcessCores, rs.coresV(), totalExcessCores);
 
     int additionalRows = static_cast<int>(std::floor(static_cast<float>(totalExcessCores) / lineAllocCores));
+#ifdef MORPH_DEBUG_PLANNER
     if (additionalRows > 0)
-        std::fprintf(stderr, "Planning additional %d region rows to minimize excess cores (%d -> %d)\n",
+        DEBUG_PRINT("Planning additional %d region rows to minimize excess cores (%d -> %d)\n",
                      additionalRows, totalExcessCores, totalExcessCores - additionalRows * lineAllocCores);
     else
-        std::fprintf(stderr, "Not enough unused cores to schedule for new rows\n");
-
+        DEBUG_PRINT("Not enough unused cores to schedule for new rows\n");
+#endif
     return additionalRows;
 }
 
@@ -220,10 +227,12 @@ parallel::Plan parallel::planSimdExecution(int cores, int simdWidth, int imgW, i
     CoreAllocation ca = assignCores(hSteps, vSteps, imgW, imgH, colsPerCore, lineAllocCores, totalSafeRows,
                                     chunksVFirst, chunksV, chunksVLast, cores, totalUsedCores);
 
+#ifdef MORPH_DEBUG_PLANNER
     if (totalRows != totalSafeRows) {
-        std::fprintf(stderr, "Effectively used %d cores out of %d: SAP size exceeds region\n",
+        DEBUG_PRINT("Effectively used %d cores out of %d: SAP size exceeds region\n",
                      totalUsedCores, lineAllocCores * totalRows);
     }
+#endif
 
     return {imgW, imgH, cores, sap, std::move(rs), std::move(ca)};
 }

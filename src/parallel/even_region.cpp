@@ -1,9 +1,11 @@
 #include "even_region.h"
 
 #include <cmath>
+#include <vector>
+
+#ifdef MORPH_DEBUG_PLANNER
 #include <iostream>
 #include <iomanip>
-#include <vector>
 
 struct _DbgRegionStep {
     float w, h, r, t, d;
@@ -18,6 +20,7 @@ inline std::ostream &operator<<(std::ostream &os, const _DbgRegionStep &_d) {
               << std::setprecision(1) << _d.w << '*' << _d.h
               << std::setprecision(2) << " ratio " << _d.r << " target " << _d.t << " diff " << _d.d;
 }
+#endif
 
 static void applyRegionBoundaries(const int imgW, const int imgH, parallel::RegionSpec &regionSpec) {
     // Region dimensions (can simplify to integer division imgW / coresH, but this is clearer)
@@ -58,7 +61,9 @@ parallel::RegionSpec parallel::calculateRegions(const int imgW, const int imgH, 
         float nw = w / 2;
         float nh = 2 * h;
         float ndiff = std::abs(std::floor(nw) / nh - ratio);
+#ifdef MORPH_DEBUG_PLANNER
         std::cerr << "[Region] Candidate: " << dbgRegionStep(nw, nh, std::floor(nw) / nh, ratio, ndiff) << std::endl;
+#endif
 
         if (ndiff > diff) break;
 
@@ -71,13 +76,17 @@ parallel::RegionSpec parallel::calculateRegions(const int imgW, const int imgH, 
     w = std::floor(w);
 
     diff = std::abs(w / h - ratio);
+#ifdef MORPH_DEBUG_PLANNER
     std::cerr << "[Region] Result: " << dbgRegionStep(w, h, w / h, ratio, diff) << std::endl;
+#endif
 
     // Swap for the case height > width as we said
     if (invRatio) std::swap(w, h);
 
     RegionSpec baseRegions{cores, static_cast<int>(w), static_cast<int>(h)};
+#ifdef MORPH_DEBUG_PLANNER
     std::cerr << "[Region] Excess cores: " << baseRegions.excessCores() << std::endl;
+#endif
     applyRegionBoundaries(imgW, imgH, baseRegions);
     return baseRegions;
 }

@@ -40,6 +40,9 @@ option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
 option(MORPH_ENABLE_SIMD_AVX2 "Enable AVX2 support" OFF)
 option(MORPH_ENABLE_SIMD_AVX512F "Enable AVX512F support" OFF)
 
+# Debugging console output
+option(MORPH_DEBUG_PLANNER "Enable debug messages for parallel planner" OFF)
+
 # Site-local configuration
 include(CMakeLists.local.txt OPTIONAL)
 
@@ -80,6 +83,11 @@ else ()
     endif ()
     message(STATUS "Morph: Using standard instruction set")
 
+endif ()
+
+# Configure debug output
+if (MORPH_DEBUG_PLANNER)
+    add_compile_definitions(MORPH_DEBUG_PLANNER)
 endif ()
 
 find_package(OpenMP REQUIRED)
