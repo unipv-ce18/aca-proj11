@@ -91,7 +91,7 @@ if (MORPH_DEBUG_PLANNER)
 endif ()
 
 find_package(OpenMP REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED COMPONENTS core imgcodecs highgui)
 
 add_executable(morph ${HEADERS} ${SOURCES})
 target_link_libraries(morph PRIVATE OpenMP::OpenMP_CXX)
