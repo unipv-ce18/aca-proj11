@@ -93,8 +93,8 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #ifndef SIMD_WIDTH
     // "out" is actually "skel" to update
     uint8_t skelPx = out.at<uint8_t>(y, x);
-    uint8_t imgDiff = img.at<uint8_t>(y, x) - val;
-    val = skelPx > imgDiff ? skelPx : imgDiff;  // max
+    int imgDiff = img.at<uint8_t>(y, x) - val;
+    val = skelPx > imgDiff ? skelPx : (imgDiff < 0 ? 0 : imgDiff);  // max
 #else
     val = simd_max_epu8(
             simd_loadu(reinterpret_cast<const simdi_t *>(out.ptr(y) + x)),
