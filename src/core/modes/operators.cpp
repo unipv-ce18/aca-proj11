@@ -45,8 +45,6 @@ static void operProcCommon(int op, int argc, char *argv[]) {
 
     bool noSimd = conf.simdWidth == DEFAULT_BLOCK_WIDTH;
 
-    cv::Mat image2(image.size(),CV_8UC1);
-
     switch (op) {
         case OPERATOR_DILATE:
             //output = morph::dilate(image, elem);
@@ -56,14 +54,22 @@ static void operProcCommon(int op, int argc, char *argv[]) {
             processParallel<Erode>(plan, { output, image, elem }, noSimd);
             break;
         case OPERATOR_SKELETON: {
-            cv::Mat *I = &image;
-            cv::Mat *nxI = &image2;
+            cv::Mat temp(image.size(),CV_8UC1);
 
-            for (int i = 0; i < 20; ++i) {
+            cv::Mat *I = &image;
+            cv::Mat *nxI = &temp;
+
+            //zero fill the skeleton first
+            output.setTo(0);
+
+            int count;
+            while ((count = cv::countNonZero(*I)) > 0) {
                 processParallel<Erode>(plan, {*nxI, *I, elem}, noSimd);
                 processParallel<SkelIter>(plan, {output, *nxI, elem, *I}, noSimd);
                 std::swap(I, nxI);
+                std::cerr << "[Skeleton] " << count << " pixels remaining\n";
             }
+            temp.release();
             break;
         }
         default:
@@ -73,6 +79,8 @@ static void operProcCommon(int op, int argc, char *argv[]) {
     auto timeEnd = std::chrono::steady_clock::now();
     std::cerr << "Done in "
               << std::chrono::duration<double, std::milli>(timeEnd - timeStart).count() << "ms" << std::endl;
+
+    image.release();
 
     if (argc < 5) {
         // Display image if no output parameter is given
