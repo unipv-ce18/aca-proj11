@@ -1,5 +1,5 @@
-#ifndef MORPH_OPERATORS_H
-#define MORPH_OPERATORS_H
+#ifndef MORPH_REFERENCE_H
+#define MORPH_REFERENCE_H
 
 #include <opencv2/core/mat.hpp>
 
@@ -13,4 +13,4 @@ namespace morph {
 
 }
 
-#endif //MORPH_OPERATORS_H
+#endif //MORPH_REFERENCE_H

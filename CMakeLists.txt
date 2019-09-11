@@ -7,6 +7,7 @@ set(HEADERS
         src/capabilities.h
         src/simd_props.h
         src/core/modes.h
+        src/core/opexec.cpp
         src/core/modes/operators.h
         src/core/modes/dump_plan.h
         src/morphology/process_parallel.h
@@ -27,6 +28,7 @@ set(SOURCES
         src/morph.cpp
         src/capabilities.cpp
         src/core/modes.cpp
+        src/core/opexec.cpp
         src/core/modes/operators.cpp
         src/core/modes/dump_plan.cpp
         src/morphology/process_parallel.cpp
