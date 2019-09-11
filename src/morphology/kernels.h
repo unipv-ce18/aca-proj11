@@ -1,9 +1,9 @@
 #ifndef MORPH_KERNELS_H
 #define MORPH_KERNELS_H
 
-#include "operator_types.h"
-#include "../parallel/Chunk.h"
-#include "StrEl.h"
+#include "morphology/operator_types.h"
+#include "morphology/StrEl.h"
+#include "parallel/Chunk.h"
 
 #include <immintrin.h>
 #include <opencv2/core/mat.hpp>

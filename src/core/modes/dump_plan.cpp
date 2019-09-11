@@ -1,9 +1,11 @@
 #include "dump_plan.h"
 
-#include "../../parallel/planners.h"
-#include "../../parallel/ostream_dump.h"
+#include "parallel/planners.h"
+#include "parallel/ostream_dump.h"
 
 #include <iostream>
+
+#define DUMP_PLAN_SIMD_WIDTH 32
 
 void dumpPlanProc(int argc, char **argv) {
     if (argc < 6) {
@@ -17,7 +19,7 @@ void dumpPlanProc(int argc, char **argv) {
         int cores = std::stoi(argv[5]);
 
         std::cerr << "Planning for " << imgW << 'x' << imgH << " (sap " << sap << "), " << cores << " cores\n";
-        parallel::Plan p = parallel::planSimdExecution(cores, 32, imgW, imgH, sap);
+        parallel::Plan p = parallel::planSimdExecution(cores, DUMP_PLAN_SIMD_WIDTH, imgW, imgH, sap);
 
         using namespace parallel::print_format_json;
         std::cout << p << std::endl;

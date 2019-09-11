@@ -1,12 +1,12 @@
 #include "operators.h"
 
-#include "../../capabilities.h"
-#include "../../parallel/planners.h"
-#include "../../morphology/StrEl.h"
-#include "../../morphology/reference.h"
-#include "../../morphology/operator_types.h"
-#include "../../morphology/process_parallel.h"
-#include "../../simd_props.h"
+#include "capabilities.h"
+#include "parallel/planners.h"
+#include "morphology/StrEl.h"
+#include "morphology/reference.h"
+#include "morphology/operator_types.h"
+#include "morphology/process_parallel.h"
+#include "simd_props.h"
 
 #include <opencv2/highgui/highgui.hpp>
 

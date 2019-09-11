@@ -1,9 +1,9 @@
 #include "process_parallel.h"
 
-#include "kernels.h"
-#include "../parallel/Plan.h"
-#include "StrEl.h"
-#include "../simd_props.h"
+#include "morphology/kernels.h"
+#include "morphology/StrEl.h"
+#include "parallel/Plan.h"
+#include "simd_props.h"
 
 #include <omp.h>
 

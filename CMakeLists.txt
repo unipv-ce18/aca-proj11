@@ -46,6 +46,9 @@ option(MORPH_DEBUG_PLANNER "Enable debug messages for parallel planner" OFF)
 # Site-local configuration
 include(CMakeLists.local.txt OPTIONAL)
 
+# To allow absolute local header paths (no longer ../../../)
+include_directories("${CMAKE_SOURCE_DIR}/src")
+
 # Compiler configuration
 if (MORPH_ENABLE_SIMD_AVX512F)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
