@@ -25,7 +25,6 @@ set(HEADERS
         src/parallel/RegionSpec.h)
 
 set(SOURCES
-        src/morph.cpp
         src/capabilities.cpp
         src/core/modes.cpp
         src/core/opexec.cpp
@@ -99,6 +98,10 @@ endif ()
 find_package(OpenMP REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgcodecs highgui)
 
-add_executable(morph ${HEADERS} ${SOURCES})
+add_executable(morph ${HEADERS} ${SOURCES} src/morph.cpp)
 target_link_libraries(morph PRIVATE OpenMP::OpenMP_CXX)
 target_link_libraries(morph PUBLIC ${OpenCV_LIBS})
+
+add_executable(morphbench ${HEADERS} ${SOURCES} src/morphbench.cpp)
+target_link_libraries(morphbench PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(morphbench PUBLIC ${OpenCV_LIBS})
