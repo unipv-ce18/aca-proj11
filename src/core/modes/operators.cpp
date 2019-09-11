@@ -28,11 +28,14 @@ static void operProcCommon(int op, int argc, char *argv[]) {
     assert(image.type() == CV_8UC1);
 
     ParallelConfig conf = makeParallelConfig();
-    std::cerr << "Using " << conf.numCores << " cores (" << conf.simdWidth << " simd pixels)\n";
-    parallel::Plan plan = parallel::planSimdExecution(conf.numCores, conf.simdWidth == DEFAULT_BLOCK_WIDTH ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
-            image.size().width, image.size().height, (elem.size().width-1)/2);
+    const bool noSimd = conf.simdWidth == SIMD_WIDTH_NO_SIMD;
+    const int safePadding = (elem.size().width - 1) / 2;
+    parallel::Plan plan = parallel::planSimdExecution(conf.numCores, noSimd ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
+                                                      image.size().width, image.size().height, safePadding);
 
-    bool noSimd = conf.simdWidth == DEFAULT_BLOCK_WIDTH;
+    std::cerr << "Using " << conf.numCores << " cores (";
+    if (noSimd) std::cerr << "no simd)\n";
+    else std::cerr << conf.simdWidth << " simd pixels)\n";
 
     cv::Mat output(image.size(), CV_8UC1);
 

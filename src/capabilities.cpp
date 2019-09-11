@@ -20,7 +20,7 @@ static int getSimdPixels() {
 #ifdef MORPH_ENABLE_SIMD_SSE2
                 __builtin_cpu_supports("sse2") ? SIMD_WIDTH_SSE2 :
 #endif
-                DEFAULT_BLOCK_WIDTH;
+                SIMD_WIDTH_NO_SIMD;
     } else
 #ifdef MORPH_ENABLE_SIMD_AVX512F
     if (strcmp(simdType, "AVX512") == 0) {
@@ -47,7 +47,7 @@ static int getSimdPixels() {
     } else
 #endif
     if (strcmp(simdType,"none")==0)
-        return DEFAULT_BLOCK_WIDTH;
+        return SIMD_WIDTH_NO_SIMD;
     else
         throw std::runtime_error("Unrecognized SIMD extension type");
 }
