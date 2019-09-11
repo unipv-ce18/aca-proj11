@@ -1,7 +1,6 @@
 #include "process_parallel.h"
 
 #include "morphology/kernels.h"
-#include "morphology/StrEl.h"
 #include "parallel/Plan.h"
 #include "simd_props.h"
 
@@ -53,3 +52,12 @@ void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
         }
     }
 }
+
+/* Explicitly instantiate the template to keep things clean linker-wise
+ * and avoid including it in each compilation unit that requires it.
+ *
+ * Otherwise we would need to #include "process_parallel.tcc" in our header and remove this from CMake
+ */
+template void processParallel<Dilate>(parallel::Plan &plan, BaseOpParams params, const bool noSimd);
+template void processParallel<Erode>(parallel::Plan &plan, BaseOpParams params, const bool noSimd);
+template void processParallel<SkelIter>(parallel::Plan &plan, SkelIterParams params, const bool noSimd);

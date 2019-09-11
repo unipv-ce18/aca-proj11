@@ -29,8 +29,9 @@ set(SOURCES
         src/core/modes.cpp
         src/core/modes/operators.cpp
         src/core/modes/dump_plan.cpp
-        src/morphology/StrEl.cpp
+        src/morphology/process_parallel.cpp
         src/morphology/reference_dilate.cpp
+        src/morphology/StrEl.cpp
         src/parallel/even_region.cpp
         src/parallel/ostream_dump_json.cpp
         src/parallel/planner_simd.cpp)
