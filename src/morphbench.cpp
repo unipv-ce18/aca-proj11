@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Benchmarking... (" << r + 1 << '/' << par.benchRounds;
         if (r > 0) std::cerr << ", " << times[r - 1] << "ms";
         std::cerr << ")\r";
-        executeOp(EXOP_DILATE, plan, output, par.image, par.elem, noSimd, times[r]);
+        executeOp(par.mode, plan, output, par.image, par.elem, noSimd, times[r]);
     }
     std::cerr << std::endl;
 
