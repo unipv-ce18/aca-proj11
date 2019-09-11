@@ -32,6 +32,7 @@ struct BenchEnvParams {
 
 static int getModeId(std::string &modeStr) {
     if (modeStr == "dilate") return EXOP_DILATE;
+    if (modeStr == "dilate_ref") return EXOP_DILATE_REFERENCE;
     if (modeStr == "erode") return EXOP_ERODE;
     if (modeStr == "skeleton") return EXOP_SKELETON;
     throw std::invalid_argument("Unknown mode");

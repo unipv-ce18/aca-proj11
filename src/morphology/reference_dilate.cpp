@@ -3,14 +3,14 @@
 #include "StrEl.h"
 
 #include <opencv2/core/core.hpp>
-#include <iostream>
 
-cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl) {
+cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl, const int nThreads) {
     assert(image.type() == CV_8UC1);
 
     cv::Size imSize = image.size();
     cv::Mat output(imSize, CV_8UC1);
 
+#pragma omp parallel for num_threads(nThreads) collapse(2) default(none) shared(image, imSize, strEl, output)
     for (int y = 0; y < imSize.height; ++y) {
         for (int x = 0; x < imSize.width; ++x) {
 

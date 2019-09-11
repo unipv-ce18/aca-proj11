@@ -3,6 +3,7 @@
 #include "morphology/reference.h"
 #include "morphology/operator_types.h"
 #include "morphology/process_parallel.h"
+#include "parallel/Plan.h"
 
 #include "opencv2/core.hpp"
 
@@ -17,7 +18,7 @@ void executeOp(int op, parallel::Plan &plan, cv::Mat &output, cv::Mat &image, co
             processParallel<Dilate>(plan, { output, image, elem }, noSimd);
             break;
         case EXOP_DILATE_REFERENCE:
-            image = morph::dilate(image, elem);
+            image = morph::dilate(image, elem, plan.cores());
             break;
         case EXOP_ERODE:
             processParallel<Erode>(plan, { output, image, elem }, noSimd);

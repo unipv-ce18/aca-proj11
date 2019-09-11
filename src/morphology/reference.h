@@ -7,9 +7,9 @@ class StrEl;
 
 namespace morph {
 
-    cv::Mat dilate(const cv::Mat &image, const StrEl &strEl);
+    cv::Mat dilate(const cv::Mat &image, const StrEl &strEl, int nThreads);
 
-    cv::Mat erode(const cv::Mat &image, const StrEl &strEl);
+    cv::Mat erode(const cv::Mat &image, const StrEl &strEl, int nThreads);
 
 }
 

@@ -3,6 +3,9 @@ project(aca_project CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Uncomment to see actual compiler command line
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+
 set(HEADERS
         src/capabilities.h
         src/simd_props.h
