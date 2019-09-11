@@ -68,7 +68,7 @@ static BenchEnvParams getEnvParams(char *argv[]) {
     cv::Mat strElImg;
     if (envStrEl == nullptr) {
         strElImg = cv::Mat(DEF_STREL_SZ, DEF_STREL_SZ, CV_8UC4);
-        cv::randu(strElImg, cv::Scalar(0, 0, 0, 0), cv::Scalar(0, 0, 255, 255));
+        cv::randu(strElImg, cv::Scalar(0, 0, 0, 0), cv::Scalar(255, 255, 255, 255));
         std::cerr << "StrEl: [randomly generated, size " << DEF_STREL_SZ << "]\n";
     } else {
         strElImg = cv::imread(envStrEl, cv::IMREAD_UNCHANGED);
