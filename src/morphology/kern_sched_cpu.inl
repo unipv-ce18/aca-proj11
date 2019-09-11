@@ -1,3 +1,7 @@
+#if defined(K_ENABLE_BORDER_CHECKS) && defined(SIMD_WIDTH)
+#error SIMD variant only works in safe areas
+#endif
+
 // Argument mapping
 #if defined(K_METHOD_DILATE) || defined(K_METHOD_ERODE)
 cv::Mat &out = args.out;
@@ -15,17 +19,21 @@ cv::Mat const &img = args.img;
 
 #endif
 
-
+int seYa, seYb, seXa, seXb;
 
 // Outer pixel loop
 #ifdef SIMD_WIDTH
-assert(ch.rect.w == SIMD_WIDTH);
-
+//assert(ch.rect.w == SIMD_WIDTH);
 const int x = ch.rect.x;    // SIMD_WIDTH Xes processed in parallel, starting at ch.rect.x (constant)
+#include "kern_sched_cpu_sebound_x.inl"
 for (int y = ch.rect.y; y < ch.rect.y + ch.rect.h; ++y) {
+#include "kern_sched_cpu_sebound_y.inl"
+
 #else
 for (int y = ch.rect.y; y < ch.rect.y + ch.rect.h; ++y) {
+#include "kern_sched_cpu_sebound_y.inl"
 for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
+#include "kern_sched_cpu_sebound_x.inl"
 #endif
 
 // Initialize accumulator
@@ -42,21 +50,12 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #undef __INIT_VAL
 
     // Inner structural element pixel loop
-    for (int j = strEl.yMin(); j <= strEl.yMax(); ++j) {
-        for (int i = strEl.xMin(); i <= strEl.xMax(); ++i) {
+    for (int j = seYa; j <= seYb; ++j) {
+        for (int i = seXa; i <= seXb; ++i) {
             if (!strEl.isSet(j, i)) continue;
 
             int u = x + i;
             int v = y + j;
-
-#ifdef K_ENABLE_BORDER_CHECKS
-#ifndef SIMD_WIDTH
-            if (v < 0 || v >= src.size().height) continue;
-            if (u < 0 || u >= src.size().width) continue;
-#else
-            #error SIMD variant only works in safe areas
-#endif
-#endif
 
             // Actual sum/subtraction and max/min operation
 #if defined(K_METHOD_DILATE)
@@ -130,3 +129,4 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #undef K_METHOD_ERODE
 #undef K_METHOD_SKELPART
 #undef K_ENABLE_BORDER_CHECKS
+#undef K_ENABLE_BORDER_CHECKS_VERTICAL

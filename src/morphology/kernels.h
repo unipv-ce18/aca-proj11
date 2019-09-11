@@ -23,36 +23,24 @@ namespace morph {
 // Ensure SIMD is disabled
 #undef SIMD_WIDTH
 
-
-// ----- "safe" kernels with border checks -----
-
-        KERN_METHOD_DEF(safe);
-
-        KERN_METHOD(Dilate, safe) {
-#define K_METHOD_DILATE
-#define K_ENABLE_BORDER_CHECKS
-#include "kern_sched_cpu.inl"
-        }
-
-        KERN_METHOD(Erode, safe) {
-#define K_METHOD_ERODE
-#define K_ENABLE_BORDER_CHECKS
-#include "kern_sched_cpu.inl"
-        }
-
-        KERN_METHOD(SkelIter, safe) {
-#define K_METHOD_SKELPART
-#define K_ENABLE_BORDER_CHECKS
-#include "kern_sched_cpu.inl"
-        }
-
-
-// ----- Non-SIMD (single-pixel) kernels -----
-
-        KERN_METHOD_DEF(single);
+        KERN_METHOD_DEF(single);        // Non-SIMD (single-pixel) kernels
+        KERN_METHOD_DEF(single_safe);   // "safe" kernels with border checks
+        KERN_METHOD_DEF(single_safev);  // "semi-safe" kernels with vertical border checks
 
         KERN_METHOD(Dilate, single) {
 #define K_METHOD_DILATE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, single_safe) {
+#define K_METHOD_DILATE
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, single_safev) {
+#define K_METHOD_DILATE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
 #include "kern_sched_cpu.inl"
         }
 
@@ -61,10 +49,35 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(Erode, single_safe) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Erode, single_safev) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
         KERN_METHOD(SkelIter, single) {
 #define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
+
+        KERN_METHOD(SkelIter, single_safe) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(SkelIter, single_safev) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
 
 
 // ----- SSE2 kernels -----
@@ -73,9 +86,16 @@ namespace morph {
 #include "simddefs.sse2.inl"
 
         KERN_METHOD_DEF(sse2);
+        KERN_METHOD_DEF(sse2_safev);
 
         KERN_METHOD(Dilate, sse2) {
 #define K_METHOD_DILATE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, sse2_safev) {
+#define K_METHOD_DILATE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
 #include "kern_sched_cpu.inl"
         }
 
@@ -84,13 +104,26 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(Erode, sse2_safev) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
         KERN_METHOD(SkelIter, sse2) {
 #define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(SkelIter, sse2_safev) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
 #include "simddefs_clear.inl"
 #endif
+
 
 
 // ----- AVX2 kernels -----
@@ -99,9 +132,16 @@ namespace morph {
 #include "simddefs.avx2.inl"
 
         KERN_METHOD_DEF(avx2);
+        KERN_METHOD_DEF(avx2_safev);
 
         KERN_METHOD(Dilate, avx2) {
 #define K_METHOD_DILATE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, avx2_safev) {
+#define K_METHOD_DILATE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
 #include "kern_sched_cpu.inl"
         }
 
@@ -110,13 +150,26 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(Erode, avx2_safev) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
         KERN_METHOD(SkelIter, avx2) {
 #define K_METHOD_SKELPART
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(SkelIter, avx2_safev) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
 #include "simddefs_clear.inl"
 #endif
+
 
 
 // ----- AVX512F kernels -----
@@ -125,9 +178,16 @@ namespace morph {
 #include "simddefs.avx512f.inl"
 
         KERN_METHOD_DEF(avx512f);
+        KERN_METHOD_DEF(avx512f_safev);
 
         KERN_METHOD(Dilate, avx512f) {
 #define K_METHOD_DILATE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, avx512f_safev) {
+#define K_METHOD_DILATE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
 #include "kern_sched_cpu.inl"
         }
 
@@ -136,8 +196,20 @@ namespace morph {
 #include "kern_sched_cpu.inl"
         }
 
+        KERN_METHOD(Erode, avx512f_safev) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
+#include "kern_sched_cpu.inl"
+        }
+
         KERN_METHOD(SkelIter, avx512f) {
 #define K_METHOD_SKELPART
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(SkelIter, avx512f_safev) {
+#define K_METHOD_SKELPART
+#define K_ENABLE_BORDER_CHECKS_VERTICAL
 #include "kern_sched_cpu.inl"
         }
 

@@ -19,6 +19,8 @@ void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
         for (const auto &ch : alloc[core]) {
             switch (ch.type) {
                 case CHUNK_REGULAR:
+                    // Use regular kernels here
+
                     if (noSimd) {
                         _kernel_single<Operator>(params, ch);
                         continue;
@@ -43,10 +45,41 @@ void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
                         default:
                             _kernel_single<Operator>(params, ch);
                     }
-
                     break;
+
+                case CHUNK_N:
+                case CHUNK_S:
+                    // Use "safev" kernels here
+
+                    if (noSimd) {
+                        _kernel_single_safev<Operator>(params, ch);
+                        continue;
+                    }
+
+                    switch (ch.rect.w) {
+#ifdef MORPH_ENABLE_SIMD_AVX512F
+                        case SIMD_WIDTH_AVX512F:
+                            _kernel_avx512f_safev<Operator>(params, ch);
+                            break;
+#endif
+#ifdef MORPH_ENABLE_SIMD_AVX2
+                        case SIMD_WIDTH_AVX2:
+                            _kernel_avx2_safev<Operator>(params, ch);
+                            break;
+#endif
+#ifdef MORPH_ENABLE_SIMD_SSE2
+                        case SIMD_WIDTH_SSE2:
+                            _kernel_sse2_safev<Operator>(params, ch);
+                            break;
+#endif
+                        default:
+                            _kernel_single_safev<Operator>(params, ch);
+                    }
+                    break;
+
                 default:
-                    _kernel_safe<Operator>(params, ch);
+                    // Use "safe" kernels here (no SIMD available)
+                    _kernel_single_safe<Operator>(params, ch);
                     break;
             }
         }
