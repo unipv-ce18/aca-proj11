@@ -1,2 +1,15 @@
 # Uncomment this for a custom OpenCV path
 #set(OpenCV_DIR C:\\Apps\\opencv\\build)
+
+# Uncomment to enable MinGW Clang on windows w/ OpenMP from LLVM for Windows
+# also add ""-D_CMAKE_TOOLCHAIN_PREFIX=llvm-" to CMake params
+#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#    set(CMAKE_C_COMPILER "C:\\Program Files\\LLVM\\bin\\clang.exe")
+#    set(CMAKE_CXX_COMPILER "C:\\Program Files\\LLVM\\bin\\clang++.exe")
+#    set(CLANG_COVERAGE_COMPILE_FLAGS "-v -target x86_64-pc-windows-gnu -Wall -Wextra -std=gnu++17")
+#    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${CLANG_COVERAGE_COMPILE_FLAGS}" )
+#
+#    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp -I\"C:\\Program Files\\LLVM\\lib\\clang\\7.0.1\\include\"")
+#    set(OpenMP_CXX_LIB_NAMES "omp")
+#    set(OpenMP_omp_LIBRARY "C:/Program Files/LLVM/lib/libomp.lib")
+#endif ()
