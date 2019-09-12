@@ -23,7 +23,7 @@ static int getSimdPixels() {
                 SIMD_WIDTH_NO_SIMD;
     } else
 #ifdef MORPH_ENABLE_SIMD_AVX512F
-    if (strcmp(simdType, "AVX512") == 0) {
+    if (strcmpi(simdType, "AVX512") == 0) {
         if (__builtin_cpu_supports("avx512f"))
             return SIMD_WIDTH_AVX512F;
         else
@@ -31,7 +31,7 @@ static int getSimdPixels() {
     } else
 #endif
 #ifdef MORPH_ENABLE_SIMD_AVX2
-    if (strcmp(simdType, "AVX2") == 0) {
+    if (strcmpi(simdType, "AVX2") == 0) {
         if (__builtin_cpu_supports("avx2"))
             return SIMD_WIDTH_AVX2;
         else
@@ -39,14 +39,14 @@ static int getSimdPixels() {
     } else
 #endif
 #ifdef MORPH_ENABLE_SIMD_SSE2
-    if (strcmp(simdType, "SSE2") == 0) {
+    if (strcmpi(simdType, "SSE2") == 0) {
         if (__builtin_cpu_supports("sse2"))
             return SIMD_WIDTH_SSE2;
         else
             throw std::runtime_error("This machine does not support SSE2");
     } else
 #endif
-    if (strcmp(simdType,"none")==0)
+    if (strcmpi(simdType,"none")==0)
         return SIMD_WIDTH_NO_SIMD;
     else
         throw std::runtime_error("Unrecognized SIMD extension type");
