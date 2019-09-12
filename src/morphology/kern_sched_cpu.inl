@@ -6,14 +6,14 @@
 #if defined(K_METHOD_DILATE) || defined(K_METHOD_ERODE)
 cv::Mat &out = args.out;
 cv::Mat const &src = args.src;
-StrEl const &strEl = args.strEl;
+StrEl &strEl = args.strEl;
 
 #elif defined(K_METHOD_SKELPART)
 // SkelIter algorithm implies dilation(nxI, strEl) -> skel; skel is then processed further
 #define K_METHOD_DILATE
 cv::Mat &out = args.skel;
 cv::Mat const &src = args.nxImg;
-StrEl const &strEl = args.strEl;
+StrEl &strEl = args.strEl;
 
 cv::Mat const &img = args.img;
 
@@ -23,7 +23,10 @@ int seYa, seYb, seXa, seXb;
 
 // Outer pixel loop
 #ifdef SIMD_WIDTH
-//assert(ch.rect.w == SIMD_WIDTH);
+#ifndef NDEBUG
+assert(ch.rect.w == SIMD_WIDTH);
+#endif
+
 const int x = ch.rect.x;    // SIMD_WIDTH Xes processed in parallel, starting at ch.rect.x (constant)
 #include "kern_sched_cpu_sebound_x.inl"
 for (int y = ch.rect.y; y < ch.rect.y + ch.rect.h; ++y) {
@@ -60,23 +63,23 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
             // Actual sum/subtraction and max/min operation
 #if defined(K_METHOD_DILATE)
 #ifndef SIMD_WIDTH
-            int m = src.at<uint8_t>(v, u) + strEl.at(j, i);
+            int m = src.at<uint8_t>(v, u) + strEl.at(i, j);
             if (m > val) val = m;
 #else
             simdi_t m = simd_adds_epu8(
                 simd_loadu(reinterpret_cast<const simdi_t *>(src.ptr(v) + u)),
-                simd_set1_epi8(strEl.at(j, i)));
+                simd_loadu(reinterpret_cast<const simdi_t *>(&strEl.at(i, j))));
             val = simd_max_epu8(m, val);
 #endif
 
 #elif defined(K_METHOD_ERODE)
 #ifndef SIMD_WIDTH
-            int m = src.at<uint8_t>(v, u) - strEl.at(j, i);
+            int m = src.at<uint8_t>(v, u) - strEl.at(i, j);
             if (m < val) val = m;
 #else
             simdi_t m = simd_subs_epu8(
                 simd_loadu(reinterpret_cast<const simdi_t *>(src.ptr(v) + u)),
-                simd_set1_epi8(strEl.at(j, i)));
+                simd_loadu(reinterpret_cast<const simdi_t *>(&strEl.at(i, j))));
             val = simd_min_epu8(m, val);
 #endif
 

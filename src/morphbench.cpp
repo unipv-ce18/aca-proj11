@@ -45,7 +45,7 @@ static T computeStdDev(std::vector<T> &times, T mean) {
     return std::sqrt(varianceAccum / times.size());
 }
 
-static BenchEnvParams getEnvParams(char *argv[]) {
+static BenchEnvParams getEnvParams(char *argv[], int simdWidth) {
     const char *envImage = std::getenv(ENV_KEY_IMAGE);
     const char *envStrEl = std::getenv(ENV_KEY_STREL);
     const char *wrStr = std::getenv(ENV_KEY_WARMUP);
@@ -78,7 +78,7 @@ static BenchEnvParams getEnvParams(char *argv[]) {
 
     const int warmupRounds = wrStr != nullptr ? std::atoi(wrStr) : WARMUP_ROUNDS_DEFAULT;
 
-    return {mode, warmupRounds, rounds, std::move(img), StrEl(strElImg)};
+    return {mode, warmupRounds, rounds, std::move(img), StrEl(strElImg, simdWidth)};
 }
 
 int main(int argc, char *argv[]) {
@@ -98,11 +98,12 @@ int main(int argc, char *argv[]) {
         return EXIT_SUCCESS;
     }
 
-    BenchEnvParams par = getEnvParams(argv);
+    const ParallelConfig conf = makeParallelConfig();
+    const bool noSimd = conf.simdWidth == SIMD_WIDTH_NO_SIMD;
+
+    BenchEnvParams par = getEnvParams(argv, noSimd ? 1 : conf.simdWidth);
 
     // TODO copy-paste from operators.cpp, ROFL
-    ParallelConfig conf = makeParallelConfig();
-    const bool noSimd = conf.simdWidth == SIMD_WIDTH_NO_SIMD;
     const int safePadding = (par.elem.size().width - 1) / 2;
     parallel::Plan plan = parallel::planSimdExecution(conf.numCores, noSimd ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
                                                       par.image.size().width, par.image.size().height, safePadding);

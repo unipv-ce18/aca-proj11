@@ -20,14 +20,14 @@ struct SkelIter;
 struct BaseOpParams {
     cv::Mat &out;
     cv::Mat const &src;
-    StrEl const &strEl;
+    StrEl &strEl; // No const, for pointer access
 };
 
 /// Kernel parameters struct for the Skeleton Iteration operator
 struct SkelIterParams {
     cv::Mat &skel;
     cv::Mat const &nxImg;
-    StrEl const &strEl;
+    StrEl &strEl;
     cv::Mat const &img;
 };
 

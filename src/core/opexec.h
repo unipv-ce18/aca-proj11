@@ -21,7 +21,7 @@ class StrEl;
  * @param[in]   noSimd          Whether or not SIMD processing should be used
  * @param[out]  runTimeMillis   The execution time in milliseconds
  */
-void executeOp(int op, parallel::Plan &plan, cv::Mat &output, cv::Mat &image, const StrEl &elem,
+void executeOp(int op, parallel::Plan &plan, cv::Mat &output, cv::Mat &image, StrEl &elem,
                bool noSimd, double &runTimeMillis);
 
 #endif //MORPH_OPEXEC_H

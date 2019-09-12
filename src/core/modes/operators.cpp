@@ -20,7 +20,6 @@ static void operProcCommon(int op, int argc, char *argv[]) {
     cv::Mat elemMat = cv::imread(argv[2], cv::IMREAD_UNCHANGED);
     if (!elemMat.data)
         throw std::runtime_error("Cannot load structural element image");
-    StrEl elem(elemMat);
 
     cv::Mat image = cv::imread(argv[3], cv::IMREAD_GRAYSCALE);
     if (!image.data)
@@ -29,6 +28,7 @@ static void operProcCommon(int op, int argc, char *argv[]) {
 
     ParallelConfig conf = makeParallelConfig();
     const bool noSimd = conf.simdWidth == SIMD_WIDTH_NO_SIMD;
+    StrEl elem(elemMat, noSimd ? 1 : conf.simdWidth);
     const int safePadding = (elem.size().width - 1) / 2;
     parallel::Plan plan = parallel::planSimdExecution(conf.numCores, noSimd ? BLOCK_WIDTH_NO_SIMD : conf.simdWidth,
                                                       image.size().width, image.size().height, safePadding);

@@ -9,7 +9,7 @@
 
 #include <chrono>
 
-void executeOp(int op, parallel::Plan &plan, cv::Mat &output, cv::Mat &image, const StrEl &elem,
+void executeOp(int op, parallel::Plan &plan, cv::Mat &output, cv::Mat &image, StrEl &elem,
                bool noSimd, double &runTimeMillis) {
     auto timeStart = std::chrono::steady_clock::now();
 
