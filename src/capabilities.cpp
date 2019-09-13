@@ -4,7 +4,7 @@
 #include <omp.h>
 
 #include <cstdlib>
-#include <cstring>
+#include <string>
 #include <stdexcept>
 
 static int getSimdPixels() {
@@ -21,17 +21,20 @@ static int getSimdPixels() {
                 __builtin_cpu_supports("sse2") ? SIMD_WIDTH_SSE2 :
 #endif
                 SIMD_WIDTH_NO_SIMD;
-    } else
+    }
+
+    std::string sSimdType(simdType);
+    std::transform(sSimdType.begin(), sSimdType.end(), sSimdType.begin(), ::tolower);
 #ifdef MORPH_ENABLE_SIMD_AVX512F
-    if (strcmpi(simdType, "AVX512") == 0) {
-        if (__builtin_cpu_supports("avx512f"))
+    if (sSimdType == "avx512") {
+        if (__builtin_cpu_supports("avx512f") && __builtin_cpu_supports("avx512bw"))
             return SIMD_WIDTH_AVX512F;
         else
             throw std::runtime_error("This machine does not support AVX512");
     } else
 #endif
 #ifdef MORPH_ENABLE_SIMD_AVX2
-    if (strcmpi(simdType, "AVX2") == 0) {
+    if (sSimdType == "avx2") {
         if (__builtin_cpu_supports("avx2"))
             return SIMD_WIDTH_AVX2;
         else
@@ -39,14 +42,14 @@ static int getSimdPixels() {
     } else
 #endif
 #ifdef MORPH_ENABLE_SIMD_SSE2
-    if (strcmpi(simdType, "SSE2") == 0) {
+    if (sSimdType == "sse2") {
         if (__builtin_cpu_supports("sse2"))
             return SIMD_WIDTH_SSE2;
         else
             throw std::runtime_error("This machine does not support SSE2");
     } else
 #endif
-    if (strcmpi(simdType,"none")==0)
+    if (sSimdType == "none")
         return SIMD_WIDTH_NO_SIMD;
     else
         throw std::runtime_error("Unrecognized SIMD extension type");
