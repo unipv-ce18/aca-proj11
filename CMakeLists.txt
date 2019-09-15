@@ -79,7 +79,7 @@ elseif (MORPH_ENABLE_SIMD_AVX2)
 elseif (MORPH_ENABLE_SIMD_SSE2)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         add_compile_options(-msse2)
-    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    elseif ((CMAKE_CXX_COMPILER_ID MATCHES "MSVC") AND NOT CMAKE_CL_64)
         add_compile_options(/arch:SSE2)
     endif ()
     add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
@@ -96,6 +96,11 @@ endif ()
 # Configure debug output
 if (MORPH_DEBUG_PLANNER)
     add_compile_definitions(MORPH_DEBUG_PLANNER)
+endif ()
+
+# Ensure we optimize for speed in MSVC in release mode
+if ((CMAKE_CXX_COMPILER_ID MATCHES "MSVC") AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+    add_compile_options(/O2)
 endif ()
 
 find_package(OpenMP REQUIRED)

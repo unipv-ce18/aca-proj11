@@ -4,6 +4,7 @@
 #include "parallel/ostream_dump.h"
 
 #include <iostream>
+#include <string>
 
 #define DUMP_PLAN_SIMD_WIDTH 32
 

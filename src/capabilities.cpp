@@ -8,18 +8,29 @@
 #include <string>
 #include <stdexcept>
 
+#ifdef _MSC_VER
+#pragma message("No CPU feature detection for MSVC")
+#define CPU_HAS_SSE2    true
+#define CPU_HAS_AVX2    true
+#define CPU_HAS_AVX512  true
+#else
+#define CPU_HAS_SSE2    __builtin_cpu_supports("sse2")
+#define CPU_HAS_AVX2    __builtin_cpu_supports("avx2")
+#define CPU_HAS_AVX512  (__builtin_cpu_supports("avx512f") && __builtin_cpu_supports("avx512bw"))
+#endif
+
 static int getSimdPixels() {
     char *simdType = std::getenv("MORPH_SIMD");
     if (simdType == nullptr) {
         return
 #ifdef MORPH_ENABLE_SIMD_AVX512F
-                __builtin_cpu_supports("avx512f") ? SIMD_WIDTH_AVX512F :
+                CPU_HAS_AVX512 ? SIMD_WIDTH_AVX512F :
 #endif
 #ifdef MORPH_ENABLE_SIMD_AVX2
-                __builtin_cpu_supports("avx2") ? SIMD_WIDTH_AVX2 :
+                CPU_HAS_AVX2 ? SIMD_WIDTH_AVX2 :
 #endif
 #ifdef MORPH_ENABLE_SIMD_SSE2
-                __builtin_cpu_supports("sse2") ? SIMD_WIDTH_SSE2 :
+                CPU_HAS_SSE2 ? SIMD_WIDTH_SSE2 :
 #endif
                 SIMD_WIDTH_NO_SIMD;
     }
@@ -28,7 +39,7 @@ static int getSimdPixels() {
     std::transform(sSimdType.begin(), sSimdType.end(), sSimdType.begin(), ::tolower);
 #ifdef MORPH_ENABLE_SIMD_AVX512F
     if (sSimdType == "avx512") {
-        if (__builtin_cpu_supports("avx512f") && __builtin_cpu_supports("avx512bw"))
+        if (CPU_HAS_AVX512)
             return SIMD_WIDTH_AVX512F;
         else
             throw std::runtime_error("This machine does not support AVX512");
@@ -36,7 +47,7 @@ static int getSimdPixels() {
 #endif
 #ifdef MORPH_ENABLE_SIMD_AVX2
     if (sSimdType == "avx2") {
-        if (__builtin_cpu_supports("avx2"))
+        if (CPU_HAS_AVX2)
             return SIMD_WIDTH_AVX2;
         else
             throw std::runtime_error("This machine does not support AVX2");
@@ -44,7 +55,7 @@ static int getSimdPixels() {
 #endif
 #ifdef MORPH_ENABLE_SIMD_SSE2
     if (sSimdType == "sse2") {
-        if (__builtin_cpu_supports("sse2"))
+        if (CPU_HAS_SSE2)
             return SIMD_WIDTH_SSE2;
         else
             throw std::runtime_error("This machine does not support SSE2");

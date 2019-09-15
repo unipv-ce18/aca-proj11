@@ -3,8 +3,8 @@
 #include "Plan.h"
 #include "even_region.h"
 
+#include <algorithm>
 #include <cmath>
-#include <memory>
 
 #ifdef MORPH_DEBUG_PLANNER
 #include <iostream>
