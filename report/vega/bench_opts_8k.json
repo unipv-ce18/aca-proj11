@@ -1,0 +1,62 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title":{
+    "text": "morphbench 5 dilate runs (i5-2540M, 4 cores)",
+    "anchor": "middle"
+  },
+  "data": {
+    "values": [
+      {
+        "set": "7680x4320, 65px StrEl", "var":"rev. ace05ce",
+        "times": [198.191, 198.171, 199.375, 197.437, 197.535]
+      },
+      {
+        "set": "7680x4320, 65px StrEl", "var":"rev. 00857f5a",
+        "times": [159.104, 158.910, 159.189, 158.736, 158.671]
+      }
+    ]
+  },
+  "transform": [
+    { "flatten": [ "times" ] }
+  ],
+  "facet": {
+    "row": {
+      "field": "set", "type": "nominal", "spacing": 10,
+      "header": { "title": "", "labelAngle": 0, "labelFontSize": 12 }
+    }
+  },
+  "spec": {
+    "encoding": {
+      "x": {
+        "field": "times", "type": "quantitative",
+        "axis": { "title": "Time [seconds], lower is better", "grid": false },
+        "scale": { "domain": [100,200] }
+      },
+      "y": {
+        "field": "var", "type": "nominal",
+        "axis": { "title": "", "labels": false },
+        "sort": "descending"
+      },
+      "color": {
+        "field": "var", "type": "nominal",
+        "scale": { "range": [ "#0277bd", "#ffa000" ] },
+        "legend": { "title": "" },
+        "sort": "descending"
+      }
+    },
+    "layer": [
+      {
+        "mark": "point"
+      },
+      {
+        "width": 400,
+        "height": {"step": 18},
+        "mark": { "type": "boxplot", "extent": "min-max" }
+      }
+    ]
+  },
+  "config": {
+    "view": { "stroke": "transparent" },
+    "axis": { "domainWidth": 1 }
+  }
+}
