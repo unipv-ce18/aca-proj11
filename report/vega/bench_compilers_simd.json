@@ -1,18 +1,22 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "title":{
-    "text": "morphbench 5 dilate runs (i5-2540M, 4 cores)",
+    "text": "morphbench 20 dilate runs (i5-2540M, 4 cores, SSE2)",
     "anchor": "middle"
   },
   "data": {
     "values": [
       {
-        "set": "7680x4320, 65px StrEl", "var":"rev. ace05ce",
-        "times": [198191, 198171, 199375, 197437, 197535]
+        "set": "7680x4320, 65px StrEl", "var":"GCC 9.2.0",
+        "times": [9328.89, 9298.91, 9315.71, 9313.43, 9317.93, 9299.9, 9298.88, 9296.46, 9308.13, 9319.34, 9302.9, 9297.96, 9337.09, 9305.79, 9321.12, 9330.41, 9500.77, 9332.83, 9308.59, 9322.51]
       },
       {
-        "set": "7680x4320, 65px StrEl", "var":"rev. 00857f5a",
-        "times": [159104, 158910, 159189, 158736, 158671]
+        "set": "7680x4320, 65px StrEl", "var":"Clang 8.0.1",
+        "times": [10068.6, 10074.4, 10085.4, 10384.5, 10432.4, 10336.2, 10063.9, 10061.1, 10052.7, 10052.9, 10054.3, 10079.5, 10057.1, 10084.8, 10063.8, 10079.2, 10086.6, 10146.4, 10080.3, 10578.3]
+      },
+      {
+        "set": "7680x4320, 65px StrEl", "var":"MSVC v142",
+        "times": [14234.6, 14272.2, 14284.8, 14407.4, 15433.3, 14251.9, 14446.2, 14211.4, 14218.7, 14223.2, 14233.4, 14243.4, 14257.7, 14224.1, 14224.7, 14233.4, 14274.7, 14259, 14269.2, 14234]
       }
     ]
   },
@@ -31,18 +35,18 @@
       "x": {
         "field": "times", "type": "quantitative",
         "axis": { "title": "Time [seconds], lower is better", "grid": false },
-        "scale": { "domain": [100,200] }
+        "scale": { "domain": [5,20] }
       },
       "y": {
         "field": "var", "type": "nominal",
         "axis": { "title": "", "labels": false },
-        "sort": "descending"
+        "sort": [ "GCC", "Clang", "MSVC" ]
       },
       "color": {
         "field": "var", "type": "nominal",
-        "scale": { "range": [ "#0277bd", "#ffa000" ] },
+        "scale": { "range": [ "#f57c00", "#78909c", "#7b1fa2" ] },
         "legend": { "title": "" },
-        "sort": "descending"
+        "sort": [ "GCC", "Clang", "MSVC" ]
       }
     },
     "layer": [

@@ -7,12 +7,16 @@
   "data": {
     "values": [
       {
-        "set": "7680x4320, 65px StrEl", "var":"rev. ace05ce",
-        "times": [198191, 198171, 199375, 197437, 197535]
+        "set": "7680x4320, 65px StrEl", "var":"GCC 9.2.0",
+        "times": [159104, 158910, 159189, 158736, 158671]
       },
       {
-        "set": "7680x4320, 65px StrEl", "var":"rev. 00857f5a",
-        "times": [159104, 158910, 159189, 158736, 158671]
+        "set": "7680x4320, 65px StrEl", "var":"Clang 8.0.1",
+        "times": [155060, 155359, 156294, 154768, 155017]
+      },
+      {
+        "set": "7680x4320, 65px StrEl", "var":"MSVC v142",
+        "times": [211762, 211440, 212556, 211979, 211661]
       }
     ]
   },
@@ -31,18 +35,18 @@
       "x": {
         "field": "times", "type": "quantitative",
         "axis": { "title": "Time [seconds], lower is better", "grid": false },
-        "scale": { "domain": [100,200] }
+        "scale": { "domain": [100,250] }
       },
       "y": {
         "field": "var", "type": "nominal",
         "axis": { "title": "", "labels": false },
-        "sort": "descending"
+        "sort": [ "GCC", "Clang", "MSVC" ]
       },
       "color": {
         "field": "var", "type": "nominal",
-        "scale": { "range": [ "#0277bd", "#ffa000" ] },
+        "scale": { "range": [ "#f57c00", "#78909c", "#7b1fa2" ] },
         "legend": { "title": "" },
-        "sort": "descending"
+        "sort": [ "GCC", "Clang", "MSVC" ]
       }
     },
     "layer": [
