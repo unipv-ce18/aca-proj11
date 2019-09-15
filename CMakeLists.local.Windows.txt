@@ -13,3 +13,7 @@
 #    set(OpenMP_CXX_LIB_NAMES "omp")
 #    set(OpenMP_omp_LIBRARY "C:/Program Files/LLVM/lib/libomp.lib")
 #endif ()
+
+# Disable AVX on older CPUs
+#set(MORPH_ENABLE_SIMD_AVX2 OFF)
+#set(MORPH_ENABLE_SIMD_AVX512F OFF)

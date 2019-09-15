@@ -3,6 +3,7 @@
 
 #include <omp.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <string>
 #include <stdexcept>

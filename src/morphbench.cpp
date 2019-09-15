@@ -9,10 +9,12 @@
 
 #include <numeric>
 #include <iostream>
+#include <fstream>
 
 #define ENV_KEY_IMAGE   "MORPHBENCH_IMAGE"
 #define ENV_KEY_STREL   "MORPHBENCH_STREL"
 #define ENV_KEY_WARMUP  "MORPHBENCH_WARMUP_ROUNDS"
+#define ENV_KEY_TIMELOG "MORPHBENCH_TIMELOG"
 
 #define DEF_IMG_W       1280
 #define DEF_IMG_H       1024
@@ -86,7 +88,7 @@ int main(int argc, char *argv[]) {
         std::cerr
             << "Usage: " << argv[0] << " <operation> <rounds>\n\n"
             << "Available modes:\n"
-               "  (same as morph, excl. dumpPlan)\n\n"
+            << "  (same as morph, excl. dumpPlan)\n\n"
             << "Environment variables:\n"
             << "  " ENV_KEY_IMAGE "\n"
                "    The image to process (default " << DEF_IMG_W << 'x' << DEF_IMG_H << " random)\n"
@@ -94,7 +96,9 @@ int main(int argc, char *argv[]) {
                "    The structural element to use (default random of size " << DEF_STREL_SZ << ")\n"
             << "  " ENV_KEY_WARMUP "\n"
                "    Number of warmup rounds before starting the benchmark (default " << WARMUP_ROUNDS_DEFAULT << ")\n"
-               "  (morph variables can be used in morphbench too)";
+            << "  " ENV_KEY_TIMELOG "\n"
+               "    Output file for timings dataset\n"
+            << "  (morph variables can be used in morphbench too)\n";
         return EXIT_SUCCESS;
     }
 
@@ -138,6 +142,16 @@ int main(int argc, char *argv[]) {
     std::cerr << "Completed in " << timeTot << "ms ("
               << "min: " << *timeMin << "ms, max: " << *timeMax << "ms, "
               << "avg: " << timeAvg << "ms, dev: " << computeStdDev(times, timeAvg) << "ms)\n";
+
+    const char *timeFile = std::getenv(ENV_KEY_TIMELOG);
+    if (timeFile != nullptr) {
+        std::ofstream file(timeFile, std::ofstream::out);
+        for (auto t = times.begin(); t != times.end(); ++t) {
+            file << *t;
+            if (std::next(t) != times.end()) file << ", ";
+        }
+        file.close();
+    }
 
     return EXIT_SUCCESS;
 }
