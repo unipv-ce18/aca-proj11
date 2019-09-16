@@ -24,6 +24,22 @@
 
 #define BLOCK_WIDTH_NO_SIMD 32
 
+#ifdef MORPH_ALIGN_IMAGES
+#define ALIGN_BLOCK_SIZE 64
+inline cv::Mat alignMat(const cv::Mat &orig, int sap) {
+    auto sz = orig.size();
+
+    const int alignedW = 2 * ALIGN_BLOCK_SIZE + (sz.width & ~(ALIGN_BLOCK_SIZE - 1));
+
+    std::fprintf(stderr, "%dx%d (%d)\n", sz.width, sz.height, alignedW);
+    std::fprintf(stderr, "%d : %d\n", ALIGN_BLOCK_SIZE - sap, ALIGN_BLOCK_SIZE - sap + sz.width);
+    cv::Mat bigMat(sz.height, alignedW, CV_8UC1);
+
+    // Can use module, if sap = 0 we want start = 0
+    return bigMat.colRange(ALIGN_BLOCK_SIZE - sap, ALIGN_BLOCK_SIZE - sap + sz.width);
+}
+#endif
+
 struct BenchEnvParams {
     int mode;
     int warmupRounds;
@@ -119,10 +135,18 @@ int main(int argc, char *argv[]) {
     cv::Mat output(par.image.size(), CV_8UC1);
     std::vector<double> times(par.benchRounds);
 
+#ifdef MORPH_ALIGN_IMAGES
+    cv::Mat inImg = alignMat(par.image, safePadding);
+    cv::Mat outImg = alignMat(output, safePadding);
+#else
+    cv::Mat &inImg = par.image;
+    cv::Mat &outImg = output;
+#endif
+
     for (int r = 0; r < par.warmupRounds; ++r) {
         std::cerr << "Warming up... (" << r + 1 << '/' << par.warmupRounds << ")\r";
         double dummyTime = 0;
-        executeOp(par.mode, plan, output, par.image, par.elem, noSimd, dummyTime);
+        executeOp(par.mode, plan, outImg, inImg, par.elem, noSimd, dummyTime);
     }
     if (par.warmupRounds > 0) std::cerr << std::endl;
 
@@ -130,7 +154,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Benchmarking... (" << r + 1 << '/' << par.benchRounds;
         if (r > 0) std::cerr << ", " << times[r - 1] << "ms";
         std::cerr << ")\r";
-        executeOp(par.mode, plan, output, par.image, par.elem, noSimd, times[r]);
+        executeOp(par.mode, plan, outImg, inImg, par.elem, noSimd, times[r]);
     }
     std::cerr << std::endl;
 

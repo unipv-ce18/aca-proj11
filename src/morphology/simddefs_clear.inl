@@ -10,4 +10,6 @@
 #undef simd_set1_epi8
 
 #undef simd_loadu
+#undef simd_load
 #undef simd_storeu
+#undef simd_store
