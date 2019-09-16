@@ -1,0 +1,63 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title":{
+    "text": "morphbench 20 dilate runs (i5-2540M, 4 cores, SSE2)",
+    "anchor": "middle"
+  },
+  "data": {
+    "values": [
+      {
+        "set": "7680x4320, 65px StrEl", "var":"rev. ace05ce",
+        "times": [15430.9, 15488.9, 15441.5, 15443.2, 15391.3, 15392.9, 15411, 15431.4, 15466, 15414.5, 15441.7, 15412.5, 15445.2, 15416.8, 15445.1, 15468.6, 15440, 15472.9, 15831.9, 15535.6]
+      },
+      {
+        "set": "7680x4320, 65px StrEl", "var":"rev. 00857f5a",
+        "times": [9328.89, 9298.91, 9315.71, 9313.43, 9317.93, 9299.9, 9298.88, 9296.46, 9308.13, 9319.34, 9302.9, 9297.96, 9337.09, 9305.79, 9321.12, 9330.41, 9500.77, 9332.83, 9308.59, 9322.51]
+      }
+    ]
+  },
+  "transform": [
+    { "flatten": [ "times" ] },
+    { "calculate": "datum.times/1000", "as": "times" }
+  ],
+  "facet": {
+    "row": {
+      "field": "set", "type": "nominal", "spacing": 10,
+      "header": { "title": "", "labelAngle": 0, "labelFontSize": 12 }
+    }
+  },
+  "spec": {
+    "encoding": {
+      "x": {
+        "field": "times", "type": "quantitative",
+        "axis": { "title": "Time [seconds], lower is better", "grid": false },
+        "scale": { "domain": [5,20] }
+      },
+      "y": {
+        "field": "var", "type": "nominal",
+        "axis": { "title": "", "labels": false },
+        "sort": "descending"
+      },
+      "color": {
+        "field": "var", "type": "nominal",
+        "scale": { "range": [ "#0277bd", "#ffa000" ] },
+        "legend": { "title": "" },
+        "sort": "descending"
+      }
+    },
+    "layer": [
+      {
+        "mark": "point"
+      },
+      {
+        "width": 400,
+        "height": {"step": 18},
+        "mark": { "type": "boxplot", "extent": "min-max" }
+      }
+    ]
+  },
+  "config": {
+    "view": { "stroke": "transparent" },
+    "axis": { "domainWidth": 1 }
+  }
+}

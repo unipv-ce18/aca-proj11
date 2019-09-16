@@ -68,7 +68,7 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #else
             simdi_t m = simd_adds_epu8(
                 simd_loadu(reinterpret_cast<const simdi_t *>(src.ptr(v) + u)),
-                simd_loadu(reinterpret_cast<const simdi_t *>(&strEl.at(i, j))));
+                simd_load(reinterpret_cast<const simdi_t *>(&strEl.at(i, j))));
             val = simd_max_epu8(m, val);
 #endif
 
@@ -119,7 +119,7 @@ for (int x = ch.rect.x; x < ch.rect.x + ch.rect.w; ++x) {
 #endif
 );
 #else
-    simd_storeu(reinterpret_cast<simdi_t *>(out.ptr(y) + x), val);
+    simd_store(reinterpret_cast<simdi_t *>(out.ptr(y) + x), val);
 #endif
 
 }

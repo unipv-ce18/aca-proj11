@@ -9,10 +9,12 @@
 
 #include <numeric>
 #include <iostream>
+#include <fstream>
 
 #define ENV_KEY_IMAGE   "MORPHBENCH_IMAGE"
 #define ENV_KEY_STREL   "MORPHBENCH_STREL"
 #define ENV_KEY_WARMUP  "MORPHBENCH_WARMUP_ROUNDS"
+#define ENV_KEY_TIMELOG "MORPHBENCH_TIMELOG"
 
 #define DEF_IMG_W       1280
 #define DEF_IMG_H       1024
@@ -21,6 +23,22 @@
 #define WARMUP_ROUNDS_DEFAULT   4
 
 #define BLOCK_WIDTH_NO_SIMD 32
+
+#ifdef MORPH_ALIGN_IMAGES
+#define ALIGN_BLOCK_SIZE 64
+inline cv::Mat alignMat(const cv::Mat &orig, int sap) {
+    auto sz = orig.size();
+
+    const int alignedW = 2 * ALIGN_BLOCK_SIZE + (sz.width & ~(ALIGN_BLOCK_SIZE - 1));
+
+    std::fprintf(stderr, "%dx%d (%d)\n", sz.width, sz.height, alignedW);
+    std::fprintf(stderr, "%d : %d\n", ALIGN_BLOCK_SIZE - sap, ALIGN_BLOCK_SIZE - sap + sz.width);
+    cv::Mat bigMat(sz.height, alignedW, CV_8UC1);
+
+    // Can use module, if sap = 0 we want start = 0
+    return bigMat.colRange(ALIGN_BLOCK_SIZE - sap, ALIGN_BLOCK_SIZE - sap + sz.width);
+}
+#endif
 
 struct BenchEnvParams {
     int mode;
@@ -86,7 +104,7 @@ int main(int argc, char *argv[]) {
         std::cerr
             << "Usage: " << argv[0] << " <operation> <rounds>\n\n"
             << "Available modes:\n"
-               "  (same as morph, excl. dumpPlan)\n\n"
+            << "  (same as morph, excl. dumpPlan)\n\n"
             << "Environment variables:\n"
             << "  " ENV_KEY_IMAGE "\n"
                "    The image to process (default " << DEF_IMG_W << 'x' << DEF_IMG_H << " random)\n"
@@ -94,7 +112,9 @@ int main(int argc, char *argv[]) {
                "    The structural element to use (default random of size " << DEF_STREL_SZ << ")\n"
             << "  " ENV_KEY_WARMUP "\n"
                "    Number of warmup rounds before starting the benchmark (default " << WARMUP_ROUNDS_DEFAULT << ")\n"
-               "  (morph variables can be used in morphbench too)";
+            << "  " ENV_KEY_TIMELOG "\n"
+               "    Output file for timings dataset\n"
+            << "  (morph variables can be used in morphbench too)\n";
         return EXIT_SUCCESS;
     }
 
@@ -115,10 +135,18 @@ int main(int argc, char *argv[]) {
     cv::Mat output(par.image.size(), CV_8UC1);
     std::vector<double> times(par.benchRounds);
 
+#ifdef MORPH_ALIGN_IMAGES
+    cv::Mat inImg = alignMat(par.image, safePadding);
+    cv::Mat outImg = alignMat(output, safePadding);
+#else
+    cv::Mat &inImg = par.image;
+    cv::Mat &outImg = output;
+#endif
+
     for (int r = 0; r < par.warmupRounds; ++r) {
         std::cerr << "Warming up... (" << r + 1 << '/' << par.warmupRounds << ")\r";
         double dummyTime = 0;
-        executeOp(par.mode, plan, output, par.image, par.elem, noSimd, dummyTime);
+        executeOp(par.mode, plan, outImg, inImg, par.elem, noSimd, dummyTime);
     }
     if (par.warmupRounds > 0) std::cerr << std::endl;
 
@@ -126,7 +154,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Benchmarking... (" << r + 1 << '/' << par.benchRounds;
         if (r > 0) std::cerr << ", " << times[r - 1] << "ms";
         std::cerr << ")\r";
-        executeOp(par.mode, plan, output, par.image, par.elem, noSimd, times[r]);
+        executeOp(par.mode, plan, outImg, inImg, par.elem, noSimd, times[r]);
     }
     std::cerr << std::endl;
 
@@ -138,6 +166,16 @@ int main(int argc, char *argv[]) {
     std::cerr << "Completed in " << timeTot << "ms ("
               << "min: " << *timeMin << "ms, max: " << *timeMax << "ms, "
               << "avg: " << timeAvg << "ms, dev: " << computeStdDev(times, timeAvg) << "ms)\n";
+
+    const char *timeFile = std::getenv(ENV_KEY_TIMELOG);
+    if (timeFile != nullptr) {
+        std::ofstream file(timeFile, std::ofstream::out);
+        for (auto t = times.begin(); t != times.end(); ++t) {
+            file << *t;
+            if (std::next(t) != times.end()) file << ", ";
+        }
+        file.close();
+    }
 
     return EXIT_SUCCESS;
 }

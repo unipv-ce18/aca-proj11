@@ -14,7 +14,15 @@
 
 // 512 bit data load/store
 #define simd_loadu      _mm512_loadu_si512
-// _mm512_load_si512    (must be 64B aligned)
+#ifdef MORPH_ALIGN_IMAGES
+#define simd_load       _mm512_load_si512   // (must be 64B aligned)
+#else
+#define simd_load       simd_loadu
+#endif
 #define simd_storeu     _mm512_storeu_si512
-// _mm512_store_si512   (must be 64B aligned)
+#ifdef MORPH_ALIGN_IMAGES
+#define simd_store      _mm512_store_si512  // (must be 64B aligned)
+#else
+#define simd_store      simd_storeu
+#endif
 // _mm512_stream_si512  (non temporal, must aligned)
