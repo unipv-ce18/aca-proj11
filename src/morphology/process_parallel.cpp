@@ -12,7 +12,7 @@ void processParallel(parallel::Plan &plan, OpArgs params, const bool noSimd) {
 
     using namespace morph::kern;
 
-#pragma omp parallel default(none) shared(alloc, params, noSimd) num_threads(alloc.size())
+#pragma omp parallel default(none) shared(alloc, params) num_threads(alloc.size())
     {
         int core = omp_get_thread_num();
 
