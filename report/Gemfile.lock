@@ -1,0 +1,18 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    asciidoctor (2.0.10)
+    asciidoctor-diagram (1.5.18)
+      asciidoctor (>= 1.5.0, < 3.x)
+    rouge (3.10.0)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  asciidoctor
+  asciidoctor-diagram
+  rouge
+
+BUNDLED WITH
+   1.17.2
