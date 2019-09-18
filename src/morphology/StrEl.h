@@ -56,6 +56,14 @@ public:
         return cY_;
     }
 
+    uint8_t *elemPtr() {
+        return elem_.data();
+    }
+
+    uint8_t *maskPtr() {
+        return mask_.data();
+    }
+
 };
 
 #endif //MORPH_STREL_H

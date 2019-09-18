@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(aca_project CXX)
+project(aca_project LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -40,10 +40,17 @@ set(SOURCES
         src/parallel/ostream_dump_json.cpp
         src/parallel/planner_simd.cpp)
 
+set(CUDA_HEADERS
+        src/cuda/gpgpu_cuda.cuh)
+
+set(CUDA_SOURCES
+        src/cuda/gpgpu_cuda.cu)
+
 # Build options
 option(MORPH_ENABLE_SIMD_SSE2 "Enable SSE2 support" ON)
 option(MORPH_ENABLE_SIMD_AVX2 "Enable AVX2 support" ON)
 option(MORPH_ENABLE_SIMD_AVX512F "Enable AVX512F support" ON)
+option(MORPH_CUDA "Enable the CUDA language and the morphcuda target" ON)
 
 # Debugging console output
 option(MORPH_DEBUG_PLANNER "Enable debug messages for parallel planner" OFF)
@@ -58,8 +65,8 @@ include_directories("${CMAKE_SOURCE_DIR}/src")
 if (MORPH_ENABLE_SIMD_AVX512F)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         add_compile_options(-mavx512f -mavx512bw)
-    elseif (CMAKE_CXX_COMPILER_ID_MATCHES "MSVC")
-        add_compile_options(/arch:AVX512F /arch:AVX512BW)
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/arch:AVX512>)
     endif ()
     add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
@@ -70,7 +77,7 @@ elseif (MORPH_ENABLE_SIMD_AVX2)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         add_compile_options(-mavx2)
     elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-        add_compile_options(/arch:AVX2)
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/arch:AVX2>)
     endif ()
     add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     add_compile_definitions(MORPH_ENABLE_SIMD_AVX2)
@@ -80,7 +87,7 @@ elseif (MORPH_ENABLE_SIMD_SSE2)
     if ((CMAKE_CXX_COMPILER_ID MATCHES "GNU") OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         add_compile_options(-msse2)
     elseif ((CMAKE_CXX_COMPILER_ID MATCHES "MSVC") AND NOT CMAKE_CL_64)
-        add_compile_options(/arch:SSE2)
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/arch:SSE2>)
     endif ()
     add_compile_definitions(MORPH_ENABLE_SIMD_SSE2)
     message(STATUS "Morph: Using SSE2 instruction set")
@@ -100,7 +107,7 @@ endif ()
 
 # Ensure we optimize for speed in MSVC in release mode
 if ((CMAKE_CXX_COMPILER_ID MATCHES "MSVC") AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
-    add_compile_options(/O2)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/O2>)
 endif ()
 
 find_package(OpenMP REQUIRED)
@@ -113,3 +120,10 @@ target_link_libraries(morph PUBLIC ${OpenCV_LIBS})
 add_executable(morphbench ${HEADERS} ${SOURCES} src/morphbench.cpp)
 target_link_libraries(morphbench PRIVATE OpenMP::OpenMP_CXX)
 target_link_libraries(morphbench PUBLIC ${OpenCV_LIBS})
+
+if (MORPH_CUDA)
+    enable_language(CUDA)
+    add_executable(morphcuda ${HEADERS} ${SOURCES} ${CUDA_HEADERS} ${CUDA_SOURCES} src/morphcuda.cpp)
+    target_include_directories(morphcuda PRIVATE "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v10.1\\include")
+    target_link_libraries(morphcuda PUBLIC ${OpenCV_LIBS})
+endif ()
