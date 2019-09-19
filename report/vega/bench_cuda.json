@@ -14,7 +14,10 @@
     {"gpu": "GeForce GTX 1060 6GB", "type": "Retrieve", "time": 1005.623840},
     {"gpu": "GeForce GTX 970", "type": "Send","time": 20.293633},
     {"gpu": "GeForce GTX 970", "type": "Process", "time": 1783.489014},
-    {"gpu": "GeForce GTX 970", "type": "Retrieve", "time": 29.107136}
+    {"gpu": "GeForce GTX 970", "type": "Retrieve", "time": 29.107136},
+    {"gpu": "Tesla K80", "type": "Send","time": 8.194752},
+    {"gpu": "Tesla K80", "type": "Process", "time": 2759.010986},
+    {"gpu": "Tesla K80", "type": "Retrieve", "time": 23.558912}
   ]},
   "transform": [
     {
