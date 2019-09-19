@@ -1,0 +1,49 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": "morphcuda 5 runs (7680x4320 65px)",
+  "width": 400,
+  "data": {"values": [
+    {"gpu": "GeForce RTX 2070 SUPER", "type": "Send","time": 8.681408},
+    {"gpu": "GeForce RTX 2070 SUPER", "type": "Process", "time": 373.495636},
+    {"gpu": "GeForce RTX 2070 SUPER", "type": "Retrieve", "time": 16.289761},
+    {"gpu": "GeForce GTX 1080 Ti", "type": "Send","time": 7.302848},
+    {"gpu": "GeForce GTX 1080 Ti", "type": "Process", "time": 722.994324},
+    {"gpu": "GeForce GTX 1080 Ti", "type": "Retrieve", "time": 12.407680},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Send","time": 9.412480},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Process", "time": 1413.614502},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Retrieve", "time": 1005.623840},
+    {"gpu": "GeForce GTX 970", "type": "Send","time": 20.293633},
+    {"gpu": "GeForce GTX 970", "type": "Process", "time": 1783.489014},
+    {"gpu": "GeForce GTX 970", "type": "Retrieve", "time": 29.107136}
+  ]},
+  "transform": [
+    {
+      "calculate": "if(datum.type === 'Send', 0, if(datum.site === 'Process', 1, 2))",
+      "as": "typeOrder"
+    }
+  ],
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "aggregate": "sum",
+      "field": "time", "type": "quantitative",
+      "axis": { "title": "Time [ms], lower is better"}
+    },
+    "y": {
+      "field": "gpu", "type": "nominal",
+      "axis": { "title": null },
+      "sort": { "op": "sum", "field": "time", "order": "ascending" }
+    },
+    "color": {
+      "field": "type", "type": "nominal",
+      "scale": {"range": ["#ffb300", "#76b900", "#666666"]},
+      "legend": { "title": null },
+      "sort": "typeOrder"
+    },
+    "order": { "field": "typeOrder", "type": "quantitative" }
+  },
+  "config": {
+    "view": { "stroke": "transparent" },
+    "axis": { "grid": false }
+  }
+}
