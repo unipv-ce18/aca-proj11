@@ -1,0 +1,95 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title":{
+    "text": "morphbench 5 dilate rounds (GCE, Xeon Skylake, 7680x4320 65px)",
+    "anchor": "middle"
+  },
+  "data": {
+    "values": [
+      {
+        "set": "", "var": 4,
+        "times": [69080.8, 69077.5, 69098.3, 69119.6, 69077.6]
+      },
+      {
+        "set": "", "var": 6,
+        "times": [46215.2, 46225.2, 46325.1, 46259.1, 46235.8]
+      },
+      {
+        "set": "", "var": 8,
+        "times": [34648.5, 34599, 34601.8, 34672.3, 34625.2]
+      },
+      {
+        "set": "", "var": 12,
+        "times": [23120.1, 23115, 23133.1, 23137.4, 23123.9]
+      },
+      {
+        "set": "", "var": 16,
+        "times": [25605.7, 25635.5, 25649.3, 25596, 25609.1]
+      },
+      {
+        "set": "", "var": 24,
+        "times": [22545.7, 22559.5, 22536.9, 23226.2, 22552]
+      }
+    ]
+  },
+  "transform": [
+    { "flatten": [ "times" ] },
+    { "calculate": "datum.times/1000", "as": "times" },
+    {
+      "aggregate": [
+        { "op": "min", "field": "times", "as": "timem" },
+        { "op": "max", "field": "times", "as": "timex" },
+        { "op": "mean", "field": "times", "as": "timean" }
+      ],
+      "groupby": ["set", "var"]
+    }
+  ],
+  "facet": {
+    "row": {
+      "field": "set", "type": "nominal",
+      "header": { "title": "", "labelAngle": 0, "labelFontSize": 12 },
+      "sort": [ "SSE2", "AVX2", "AVX512F" ]
+    }
+  },
+  "spec": {
+    "encoding": {
+      "y": {
+        "field": "var", "type": "ordinal",
+        "axis": { "title": "Cores" },
+        "sort": "ascending"
+      }
+    },
+    "layer": [
+      {
+        "mark": { "type": "bar", "opacity": 0.6 },
+        "height": { "step": 14 },
+        "encoding": {
+          "x": {
+            "field": "timean", "type": "quantitative",
+            "scale": { "domain": [0,240] }
+          },
+          "color": {
+            "field": "var", "type": "ordinal",
+            "scale": { "range": [ "#0277bd", "#ffa000" ] },
+            "legend": null,
+            "sort": "ascending"
+          }
+        }
+      },
+      {
+        "width": 400,
+        "mark": { "type": "errorbar", "color": "#c66" },
+        "encoding": {
+          "x": {
+            "field": "timem", "type": "quantitative",
+            "axis": { "title": "Time [seconds], lower is better", "grid": true }
+          },
+          "x2": {
+            "field": "timex"
+          },
+          "size": { "value": 6 }
+        }
+      }
+    ]
+  }
+}
