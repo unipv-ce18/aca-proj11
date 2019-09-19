@@ -9,15 +9,15 @@
     {"gpu": "GeForce GTX 1080 Ti", "type": "Send","time": 7.302848},
     {"gpu": "GeForce GTX 1080 Ti", "type": "Process", "time": 722.994324},
     {"gpu": "GeForce GTX 1080 Ti", "type": "Retrieve", "time": 12.407680},
-    {"gpu": "GeForce GTX 1060 6GB", "type": "Send","time": 9.412480},
-    {"gpu": "GeForce GTX 1060 6GB", "type": "Process", "time": 1413.614502},
-    {"gpu": "GeForce GTX 1060 6GB", "type": "Retrieve", "time": 1005.623840},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Send","time": 9.317280},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Process", "time": 1403.692017},
+    {"gpu": "GeForce GTX 1060 6GB", "type": "Retrieve", "time": 12.806144},
     {"gpu": "GeForce GTX 970", "type": "Send","time": 20.293633},
     {"gpu": "GeForce GTX 970", "type": "Process", "time": 1783.489014},
     {"gpu": "GeForce GTX 970", "type": "Retrieve", "time": 29.107136},
-    {"gpu": "Tesla K80", "type": "Send","time": 8.194752},
-    {"gpu": "Tesla K80", "type": "Process", "time": 2759.010986},
-    {"gpu": "Tesla K80", "type": "Retrieve", "time": 23.558912}
+    {"gpu": "Tesla K80 (Google Cloud)", "type": "Send","time": 8.194752},
+    {"gpu": "Tesla K80 (Google Cloud)", "type": "Process", "time": 2759.010986},
+    {"gpu": "Tesla K80 (Google Cloud)", "type": "Retrieve", "time": 23.558912}
   ]},
   "transform": [
     {

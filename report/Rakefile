@@ -1,0 +1,11 @@
+namespace :report do
+  desc 'build report formats'
+  task :build do
+    begin
+      puts 'Generating HTML'
+      `bundle exec asciidoctor -r asciidoctor-diagram main.asc`
+    end
+  end
+end
+
+task :default => "report:build"

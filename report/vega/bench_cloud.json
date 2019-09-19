@@ -78,7 +78,7 @@
       },
       {
         "width": 400,
-        "mark": { "type": "errorbar", "color": "#c66" },
+        "mark": { "type": "errorbar", "color": "#333" },
         "encoding": {
           "x": {
             "field": "timem", "type": "quantitative",
@@ -87,7 +87,7 @@
           "x2": {
             "field": "timex"
           },
-          "size": { "value": 6 }
+          "size": { "value": 2 }
         }
       }
     ]
