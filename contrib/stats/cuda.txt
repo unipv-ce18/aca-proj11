@@ -1,0 +1,58 @@
+CUDA Device: GeForce RTX 2070 SUPER
+  SM count:       40
+    Max threads:  1024 each
+    Warp size:    32 threads
+  Max grid dims:  2147483647 x 65535 x 65535 blocks
+  Max block dims: 1024 x 1024 x 64 threads
+    Max threads:  1024 per block
+
+Using a 240 x 135 grid with 32 x 32 threads per block
+Done in 398.466797ms (8.681408ms copy, 373.495636ms exec, 16.289761ms copy back)
+
+
+CUDA Device: GeForce GTX 1080 Ti
+  SM count:       28
+    Max threads:  2048 each
+    Warp size:    32 threads
+  Max grid dims:  2147483647 x 65535 x 65535 blocks
+  Max block dims: 1024 x 1024 x 64 threads
+    Max threads:  1024 per block
+
+Using a 240 x 135 grid with 32 x 32 threads per block
+Done in 742.704834ms (7.302848ms copy, 722.994324ms exec, 12.407680ms copy back)
+
+
+CUDA Device: GeForce GTX 970
+  SM count:       13
+    Max threads:  2048 each
+    Warp size:    32 threads
+  Max grid dims:  2147483647 x 65535 x 65535 blocks
+  Max block dims: 1024 x 1024 x 64 threads
+    Max threads:  1024 per block
+
+Using a 240 x 135 grid with 32 x 32 threads per block
+Done in 1832.889771ms (20.293633ms copy, 1783.489014ms exec, 29.107136ms copy back)
+
+
+CUDA Device: GeForce GTX 1060 6GB
+  SM count:       10
+    Max threads:  2048 each
+    Warp size:    32 threads
+  Max grid dims:  2147483647 x 65535 x 65535 blocks
+  Max block dims: 1024 x 1024 x 64 threads
+    Max threads:  1024 per block
+
+Using a 240 x 135 grid with 32 x 32 threads per block
+Done in 1425.015430ms (9.317280ms copy, 1403.692017ms exec, 12.806144ms copy back)
+
+
+CUDA Device: Tesla K80
+  SM count:       13
+    Max threads:  2048 each
+    Warp size:    32 threads
+  Max grid dims:  2147483647 x 65535 x 65535 blocks
+  Max block dims: 1024 x 1024 x 64 threads
+    Max threads:  1024 per block
+
+Using a 240 x 135 grid with 32 x 32 threads per block
+Done in 2790.764648ms (8.194752ms copy, 2759.010986ms exec, 23.558912ms copy back)
