@@ -1,0 +1,3 @@
+#planning1 img,#planning2 img,#planning3 img,#planning4 img{height: 320px}
+.sect1>h2:not(#_parallelization_with_openmp){page-break-before:always}
+img[src^="images/bench_6900"],img[src^="images/bench_cloud"]{width:70%}
