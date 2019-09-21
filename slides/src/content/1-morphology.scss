@@ -1,0 +1,29 @@
+#base-ops {
+  padding-top: 16px;
+}
+
+#op-dilate, #op-erode {
+  background-color: #f4f4f4;
+  margin: 26px -60px 0;
+  padding: 16px 60px;
+
+  > div { width: 50%; }
+  > img { width: 45%; }
+}
+
+#op-dilate {
+  > div { float: left; }
+  > img { float: right; }
+}
+
+#op-erode {
+  > div { float: right; }
+  > img { float: left; }
+}
+
+
+#op-dilate:after, #op-erode:after {
+  content: '';
+  display: block;
+  clear: both;
+}

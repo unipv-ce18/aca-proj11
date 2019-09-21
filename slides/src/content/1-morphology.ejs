@@ -1,0 +1,27 @@
+<div id="base-ops" class="slide step" data-x="0" data-y="0" data-z="0" data-rotate-x="0" data-scale="1">
+    <p>
+        <strong>Mathematical Morphology</strong> is a computer vision technique for the analysis and processing of
+        geometrical structures.
+    </p>
+    <p>
+        Operators of morphology are mostly a composition of <em>Dilation</em> and <em>Erosion</em> algorithms.
+    </p>
+    <div id="op-dilate">
+        <div>
+            <p>
+                <strong>Grayscale dilation</strong> is defined by:
+            </p>
+            $$ (A \oplus B)(x) = \sup_{y \in B}[A(y) + B(x-y)] $$
+        </div>
+        <img src="<%= require(REPORT_IMAGES_DIR + 'dilation.png') %>">
+    </div>
+    <div id="op-erode">
+        <div>
+            <p>
+                While <strong>erosion</strong> is:
+            </p>
+            $$ (A \ominus B)(x) = \inf_{y \in B}[A(y) + B(x-y)] $$
+        </div>
+        <img src="<%= require(REPORT_IMAGES_DIR + 'erosion.png') %>">
+    </div>
+</div>

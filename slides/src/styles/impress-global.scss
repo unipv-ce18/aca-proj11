@@ -1,0 +1,59 @@
+@import '_vars';
+
+body {
+  font-family: $font-stack-serif;
+  min-height: 740px;
+
+  background: gray(95);
+  background: radial-gradient(gray(100) 0, gray(95) 65%, gray(75) 100%);
+}
+
+.step {
+  position: relative;
+  width: 900px;
+  padding: 40px;
+  margin: 20px auto;
+
+  box-sizing: border-box;
+
+  font-family: $font-stack-serif;
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+.impress-enabled .step {
+  margin: 0;
+  opacity: 0.3;
+  transition: opacity 1s;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.slide {
+  display: block;
+
+  width: 900px;
+  height: 700px;
+  padding: 40px 60px;
+
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, .3);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+
+  color: rgb(102, 102, 102);
+  text-shadow: 0 2px 2px rgba(0, 0, 0, .1);
+
+  font-family: $font-stack-sans;
+  font-size: 20px;
+
+  // hide inner boxes overflow over border-radius
+  overflow: hidden;
+}
+
+.step > .notes {
+  display: none;
+}
+

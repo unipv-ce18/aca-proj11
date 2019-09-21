@@ -1,0 +1,42 @@
+{
+  "name": "morph-slides",
+  "version": "1.0.0",
+  "description": "Parallelizing Mathematical Morphology, project presentation",
+  "private": true,
+  "scripts": {
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unipv-ce18/aca-proj11.git",
+    "directory": "slides"
+  },
+  "author": "Luca Zanussi",
+  "contributors": [
+    "Dominik Lietavec"
+  ],
+  "license": "WTFPL",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "ejs-loader": "^0.3.3",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "impress.js": "impress/impress.js#934c2266c4e705716f2e7970c6be9f29fdc2202a",
+    "katex": "^0.11.1",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.1",
+    "webpack-merge": "^4.2.2"
+  }
+}

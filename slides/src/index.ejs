@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="description" content="ACA Project about parallelization of mathematical morphology algorithms">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body class="impress-not-supported">
+
+<div class="fallback-message">
+    <p>
+        Your browser <b>doesn't support the features required</b> to display this slideshow, so you are presented with a
+        simplified version.
+    </p>
+    <p>
+        For the best experience please use a modern and updated browser, popular ones are
+        <i><a href="https://www.mozilla.org/firefox/">Firefox</a></i> and
+        <i><a href="https://www.google.com/chrome/">Chrome</a></i>.
+    </p>
+</div>
+
+<div id="impress">
+
+   <%= require('./content/1-morphology.ejs')() %>
+
+</div>
+
+</body>
+</html>
