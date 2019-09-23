@@ -1,0 +1,11 @@
+.impress-on-plan2, .impress-on-plan3, .impress-on-plan4 {
+  #plan1 {opacity: 0}
+}
+.impress-on-plan3, .impress-on-plan4 {
+  #plan2 {opacity: 0}
+}
+.impress-on-plan4 #plan3 {opacity: 0}
+
+#plan1, #plan2, #plan3, #plan4 {
+  text-align: center;
+}

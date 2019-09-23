@@ -1,11 +1,60 @@
 <div id="kern1" class="step" data-x="1000" data-scale="2" data-rotate-z="90">
-    Placeholder
+    The planning code outputs an array, which is used by the operator template function:
+
+    <ul>
+        <li>The outer array is indexed by the <code>ompl_get_thread_num()</code>;</li>
+        <li>The inner one is iterated in each thread and contains the chunks to operate upon.</li>
+    </ul>
+
+    Each chunk has a type and is used to select the kernel better suited to process it
+    <div class="additional-content"> <h4>process_parallel.cpp</h4><pre><code>
+
+template&lt;typename Operator, typename OpArgs = typename KernelParams&lt;Operator&gt;::type>
+void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
+    const auto &alloc = plan.effectiveRegions().allocation();
+
+    using namespace morph::kern;
+
+#pragma omp parallel default(none) shared(alloc, params) num_threads(alloc.size())
+    {
+        int core = omp_get_thread_num();
+
+        for (const auto &ch : alloc[core]) {
+            switch (ch.type) {                                  (2)
+                case CHUNK_REGULAR:
+                    // Use regular non-checking kernel here
+                    _kernel_single&lt;Operator&gt;(params, ch);
+                    break;
+                default:
+                    // Use "safe" kernel for image borders
+                    _kernel_single_safe&lt;Operator&gt;(params, ch);
+                    break;
+            }
+        }
+    }
+}
+
+</code></pre>
+    </div>
 </div>
 
 <div id="kern2" class="step" data-x="0" data-scale="2" data-rotate-z="90">
-    Placeholder
+   <p> To avoid code duplication, all kernels are variants of a single inline file, which is parameterized by preprocessor directives
+    and included multiple times in <code>kernels.h</code>. </p>
+    <p>
+        Each operator has kernel variants for the edges and the main part of the image, for which we skip any branch for border checking.
+    </p>
+    <blockquote>
+        Kernels are <code>inline</code> to avoid the overhead of function calls whenever possible, <br>at the cost of binary file size.
+    </blockquote>
 </div>
 
-<div id="custresults" class="step" data-x="500" data-y="2000" data-z="0" data-scale="2" data-rotate-x="-20">
-    Placeholder
+<div id="custresults" class="step" data-x="500" data-y="3000" data-z="0" data-scale="2" data-rotate-x="-20">
+    <h2>Performance impact of custom planning</h2>
+    <img src=<%=require(REPORT_IMAGES_DIR + 'bench_comp_plan.svg')%>>
+    <img src=<%=require(REPORT_IMAGES_DIR + 'bench_comp_plan_8k.svg')%>>
+    <p>
+        With custom planning and kernels we managed to achieve a speedup up to ~1.17; further optimization become possible <span class="yellow">as shown in yellow</span>.
+
+    </p>
 </div>

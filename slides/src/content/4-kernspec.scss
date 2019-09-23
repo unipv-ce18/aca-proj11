@@ -1,0 +1,24 @@
+#kern2 p:nth-of-type(2) {
+  text-align: right;
+  margin: 70px 0;
+}
+#kern2 blockquote {
+  margin: 0;
+  background-color: rgba(0,0,0,0.1) ;
+  border-radius: 30px ;
+  padding: 5px;
+  text-align: center;
+  font-family: $font-stack-sans;
+  font-style: italic;
+}
+#custresults img {
+  width: 100%;
+  margin-bottom: 20px;
+}
+#custresults h2 {
+  text-align: center ;
+  font-family: 'PT Serif', georgia, serif ;
+}
+.yellow {
+  color:#cc8000;
+}
