@@ -1,0 +1,102 @@
+#opt1, #opt2, #opt3, #opt4 {
+  transition: all 1000ms ease-in-out 500ms;
+  opacity: 0;
+}
+
+.impress-on-intrin, .impress-on-opt, .impress-on-results {
+  #opt1, #opt2, #opt3, #opt4 {
+    opacity: 0 !important;
+  }
+}
+
+.impress-on-optresults #opt2 {
+  opacity: 0.3 !important;
+}
+
+// Pos -3
+.impress-on-opt4 #opt1 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, 4500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos -2
+.impress-on-opt3 #opt1,
+.impress-on-opt4 #opt2 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, 3500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos -1
+.impress-on-optresults #opt1,   // End state
+.impress-on-results #opt1,      // End state
+.impress-on-opt2 #opt1,
+.impress-on-opt3 #opt2,
+.impress-on-opt4 #opt3 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, 2500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos 0
+.impress-on-opt #opt1,        // Start state
+.impress-on-intrin #opt1,     // Start state
+.impress-on-optresults #opt2, // End state
+.impress-on-results #opt2,    // End state
+.impress-on-opt1 #opt1,
+.impress-on-opt2 #opt2,
+.impress-on-opt3 #opt3,
+.impress-on-opt4 #opt4 {
+  opacity: 1;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, 1500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos 1
+.impress-on-opt #opt2,        // Start state
+.impress-on-intrin #opt2,     // Start state
+.impress-on-optresults #opt3, // End state
+.impress-on-results #opt3,    // End state
+.impress-on-opt1 #opt2,
+.impress-on-opt2 #opt3,
+.impress-on-opt3 #opt4 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, 500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos 2
+.impress-on-opt #opt3,        // Start state
+.impress-on-intrin #opt3,     // Start state
+.impress-on-optresults #opt4, // End state
+.impress-on-results #opt4,    // End state
+.impress-on-opt1 #opt3,
+.impress-on-opt2 #opt4 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, -500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}
+
+// Pos 3
+.impress-on-opt #opt4,      // Start state
+.impress-on-intrin #opt4,   // Start state
+.impress-on-opt1 #opt4 {
+  opacity: 0.3;
+  transform: translate(-50%, -50%)
+             translate3d(1000px, -1500px, -5000px)
+             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             scale(4) !important;
+}

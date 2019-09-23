@@ -23,7 +23,21 @@
 
 <div id="impress">
 
-   <%= require('./content/1-morphology.ejs')() %>
+    <div id="intro" class="step" data-y="500" data-z="2000" data-rotate-y="-20">
+        Placeholder
+    </div>
+
+    <%= require('./content/1-morphology.ejs')() %>
+    <%= require('./content/2-impl.ejs')() %>
+    <%= require('./content/3-planning.ejs')() %>
+    <%= require('./content/4-kernspec.ejs')() %>
+    <%= require('./content/5-simd.ejs')() %>
+    <%= require('./content/6-optimization.ejs')() %>
+    <%= require('./content/7-results.ejs')() %>
+
+    <div id="outro" class="step" data-x="3000" data-y="3000" data-z="3000" data-scale="4" data-rotate-x="-30" data-rotate-y="20" data-rotate-z="-45">
+        Hello
+    </div>
 
 </div>
 
