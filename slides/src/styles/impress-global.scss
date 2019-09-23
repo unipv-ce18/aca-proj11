@@ -8,6 +8,50 @@ body {
   background: radial-gradient(gray(100) 0, gray(95) 65%, gray(75) 100%);
 }
 
+.impress-enabled div#impress-toolbar {
+  position: fixed;
+  bottom: 1px;
+  opacity: 0.6;
+  transform: none;
+  transition: transform .5s ease-in-out;
+  > span {
+    margin-right: 10px;
+  }
+  #impress-navigation-ui-select {
+    border: 0;
+    font-size: .7em;
+    background-color: rgba(0, 0, 0, .2);
+  }
+  #impress-navigation-ui-prev,
+  #impress-navigation-ui-next,
+  #impress-autoplay-playpause {
+    display: none;
+  }
+}
+
+.impress-progressbar {
+  position: absolute;
+  right: 0;
+  left: 0;
+
+  div {
+    width: 0;
+    height: 3px;
+    border-radius: 5px;
+    background-color: rgba(0, 83, 203, 0.7);
+    transition: width .5s, background-color .5s;
+  }
+}
+
+
+body.impress-mouse-timeout {
+  div#impress-toolbar {
+    transform: translateY(20px);
+  }
+  cursor: none;
+}
+
+// Presentation step
 .step {
   position: relative;
   width: 900px;
@@ -21,6 +65,7 @@ body {
   line-height: 1.5;
 }
 
+// Enhance steps if impress is enabled
 .impress-enabled .step {
   margin: 0;
   opacity: 0.3;
@@ -31,6 +76,7 @@ body {
   }
 }
 
+// Slide-styled steps, inspired by <http://html5slides.googlecode.com/svn/trunk/styles.css>
 .slide {
   display: block;
 
@@ -56,4 +102,3 @@ body {
 .step > .notes {
   display: none;
 }
-
