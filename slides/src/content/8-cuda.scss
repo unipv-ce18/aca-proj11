@@ -1,0 +1,62 @@
+#cuda3 svg {
+  width: 100%;
+  transform: scale(1.4);
+  text, line {
+    fill:white !important;
+  }
+}
+
+body::before {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  content: '';
+
+  background: gray(15);
+  background: radial-gradient(gray(20) 0, gray(15) 65%, gray(5) 100%);
+  z-index: -100;
+
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.impress-on-cuda1,
+.impress-on-cuda2,
+.impress-on-cuda3 {
+  &::before {
+    opacity: 1;
+  }
+  #show-more-btn {
+    background-color: rgba(255, 255, 255, .12);
+    color: gray(70);
+    &:hover {
+      background-color: rgba(255, 255, 255, .16);
+    }
+  }
+
+  div#impress-toolbar #impress-navigation-ui-select {
+    background-color: rgba(255, 255, 255, .3);
+    color: white;
+    > * {
+      color: black;
+    }
+  }
+
+  .impress-progressbar > div {
+    background-color: rgba(255, 177, 0, 0.7);
+  }
+}
+
+#cuda1, #cuda2, #cuda3 {
+  color: grey(80);
+  h1 {
+    margin-bottom: 40px;
+    color:#76b900;
+    font-family: $font-stack-sans;
+  }
+}
+
+

@@ -47,6 +47,52 @@ void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
     <blockquote>
         Kernels are <code>inline</code> to avoid the overhead of function calls whenever possible, <br>at the cost of binary file size.
     </blockquote>
+    <div class="additional-content">
+        <pre><code>
+
+#define KERN_METHOD_DEF(var) \
+    template&lt;typename Operator&gt; \
+    inline void _kernel_##var(typename KernelParams&lt;Operator&gt;::type &args, const parallel::Chunk &ch)
+
+#define KERN_METHOD(op, var) \
+    template&lt;&gt; inline void _kernel_##var&lt;op&gt;(typename KernelParams&lt;op&gt;::type &args, const parallel::Chunk &ch)
+
+namespace morph {
+    namespace kern {
+
+        // Non-SIMD (single-pixel) kernels
+        KERN_METHOD_DEF(single);                (1)
+
+        // "safe" kernels with border checks
+        KERN_METHOD_DEF(single_safe);
+
+        KERN_METHOD(Dilate, single) {
+#define K_METHOD_DILATE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Dilate, single_safe) {
+#define K_METHOD_DILATE                         (2)
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Erode, single) {
+#define K_METHOD_ERODE
+#include "kern_sched_cpu.inl"
+        }
+
+        KERN_METHOD(Erode, single_safe) {
+#define K_METHOD_ERODE
+#define K_ENABLE_BORDER_CHECKS
+#include "kern_sched_cpu.inl"
+        }
+
+    }
+}
+
+</code></pre>
+    </div>
 </div>
 
 <div id="custresults" class="step" data-x="500" data-y="3000" data-z="0" data-scale="2" data-rotate-x="-20">

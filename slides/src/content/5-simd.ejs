@@ -1,7 +1,42 @@
 <div id="simd" class="step" data-x="1500" data-y="1500" data-z="1500" data-scale="4" data-rotate-x="-30" data-rotate-z="-20">
-
+<h1>SIMD processing</h1>
+    <ul>
+        <li>To obtain an additional speedup, we choose to make <em>explicit use</em> of SIMD  instructions in our kernels, adding support for SSE2;</li>
+        <li>Support for SSE2, AVX2 and AVX512 was added;</li>
+        <li>Each instruction set provides a different theoretical speedup.</li>
+    </ul>
 </div>
 
 <div id="intrin" class="step" data-x="5000" data-scale="4">
-    Placeholder
+<p><em>Intel intrinsics</em> were used to invoke SIMD instructions from C/C++.
+Intrinsics are replaced with their equivalent intructions by the compiler.
+</p>
+    Additionally, we:
+    <ul>
+        <li>Used CMake options to set the appropriate compile flags;</li>
+        <li>Created preprocessor defines to conditionally compile SIMD kernels</li>
+    </ul>
+
+    <div class="additional-content"><p>We renamed the intrinsics functions for each instruction set
+            so we can abstract the kernel from the effective type of extension in use</p><h4>simddefs.avx512.inl</h4><pre><code>
+#define SIMD_WIDTH 64   // 512b
+#define simdi_t    __m512i
+
+// 8-bit unsigned arithmetic, saturated
+#define simd_adds_epu8  _mm512_adds_epu8
+#define simd_subs_epu8  _mm512_subs_epu8
+
+// 8-bit unsigned comparison
+#define simd_max_epu8   _mm512_max_epu8
+#define simd_min_epu8   _mm512_min_epu8
+
+// 8-bit set1 broadcast
+#define simd_set1_epi8  _mm512_set1_epi8
+
+// 512 bit data load/store
+#define simd_loadu      _mm512_loadu_si512
+#define simd_storeu     _mm512_storeu_si512
+
+</code></pre></div>
+
 </div>
