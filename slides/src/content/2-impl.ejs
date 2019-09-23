@@ -1,12 +1,55 @@
 <div id="serial" class="step" data-z="1000" data-rotate-y="20">
     <h1>Serial implementation </h1>
     <ul>
-        <li> Study of the algorithm</li>
-        <li>Matlab prototyping</li>
-        <li>Translating to C++</li>
+        <li> Study of the algorithm;</li>
+        <li>Prototyping in MATLAB;</li>
+        <li>Translating to C++.</li>
     </ul>
+    <div class="additional-content">
+        <h4>reference_dilate.cpp</h4>
+        <pre>
+          <code>
+cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl, const int nThreads) {
+    assert(image.type() == CV_8UC1);    (1)
+
+    cv::Size imSize = image.size();
+    cv::Mat output(imSize, CV_8UC1);
+
+    for (int y = 0; y &lt; imSize.height; ++y) {       (2)
+        for (int x = 0; x &lt; imSize.width; ++x) {
+            int val = 0;
+
+            for (int j = strEl.yMin(); j &lt;= strEl.yMax(); ++j) {        (3)
+                for (int i = strEl.xMin(); i &lt;= strEl.xMax(); ++i) {
+                    int u = x + i;
+                    int v = y + j;
+
+                    if (v &lt; 0 || v &gt;= imSize.height) continue;      (4)
+                    if (u &lt; 0 || u &gt;= imSize.width) continue;
+                    if (!strEl.isSet(j, i)) continue;
+
+                    int m = image.at&lt;uint8_t&gt;(v, u) + strEl.at(j, i);
+                    if (m &gt; val) val = m;
+                }
+            }
+            output.at&lt;uint8_t&gt;(y, x) = static_cast&lt;uint8_t&gt;(val &lt; 0xFF ? val : 0xFF);   (5)
+        }
+    }
+
+    return output;
+}
+          </code>
+        </pre>
+    </div>
 </div>
 
 <div id="openmp" class="step" data-z="1350" data-rel-x="280" data-rotate-y="20">
-    <h1>Parallel version using OpenMP integrated functions</h1>
+    <h1>Parallel version using OpenMP</h1>
+    <pre>
+<code>#pragma omp parallel for
+    num_threads(nThreads)   <span class="not-code">&leftarrow; Threads to use</span>
+    collapse(2)             <span class="not-code">&leftarrow; Operates on the 2d image</span>
+    default(none)           <span class="not-code">&leftarrow; No automatic variable scoping</span>
+    shared(...)             <span class="not-code">&leftarrow; Share variables between threads</span></code>
+</pre>
 </div>

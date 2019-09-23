@@ -38,6 +38,17 @@
     margin-bottom: 40px;
   }
   img{
+    opacity: 0.2;
     margin-top: 20px;
+    transition: opacity 1s;
+  }
+}
+.impress-on-skeleton #skeleton img {
+  opacity: 1;
+}
+//hide serial step while navigating to skeleton
+.impress-on-base-ops2, .impress-on-skeleton {
+  #serial, #openmp {
+    opacity: 0;
   }
 }
