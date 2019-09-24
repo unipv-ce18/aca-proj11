@@ -1,5 +1,8 @@
 import './showMore.scss'
 
+import hljs from 'highlight.js';
+import 'highlight.js/styles/foundation.css'
+
 let compRoot = undefined;
 let contentOverlay = undefined;
 let showMoreBtn = undefined;
@@ -30,6 +33,9 @@ function cbShowMore() {
     iframe.onload = function () {
       iframe.contentDocument.addEventListener('keyup', cbKeyPress);
     }
+  }
+  for (let pre of contentOverlay.querySelectorAll('pre')) {
+    hljs.highlightBlock(pre);
   }
 
   contentOverlay.classList.add('extra-on-' + currentContent.parentElement.id);

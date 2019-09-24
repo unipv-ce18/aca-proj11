@@ -17,9 +17,13 @@ Intrinsics are replaced with their equivalent intructions by the compiler.
         <li>Created preprocessor defines to conditionally compile SIMD kernels</li>
     </ul>
 
-    <div class="additional-content"><p>We renamed the intrinsics functions for each instruction set
-            so we can abstract the kernel from the effective type of extension in use</p><h4>simddefs.avx512.inl</h4><pre><code>
-#define SIMD_WIDTH 64   // 512b
+    <div class="additional-content">
+        <p>
+            We renamed the intrinsics functions for each instruction set
+            so we can abstract the kernel from the effective type of extension in use.
+        </p>
+        <h4>simddefs.avx512.inl</h4>
+        <pre><code>#define SIMD_WIDTH 64   // 512b
 #define simdi_t    __m512i
 
 // 8-bit unsigned arithmetic, saturated
@@ -35,8 +39,6 @@ Intrinsics are replaced with their equivalent intructions by the compiler.
 
 // 512 bit data load/store
 #define simd_loadu      _mm512_loadu_si512
-#define simd_storeu     _mm512_storeu_si512
-
-</code></pre></div>
-
+#define simd_storeu     _mm512_storeu_si512</code></pre>
+    </div>
 </div>

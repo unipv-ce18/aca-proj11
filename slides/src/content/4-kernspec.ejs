@@ -7,9 +7,9 @@
     </ul>
 
     Each chunk has a type and is used to select the kernel better suited to process it
-    <div class="additional-content"> <h4>process_parallel.cpp</h4><pre><code>
-
-template&lt;typename Operator, typename OpArgs = typename KernelParams&lt;Operator&gt;::type>
+    <div class="additional-content">
+        <h4>process_parallel.cpp</h4>
+        <pre class="hljs cpp"><code>template&lt;typename Operator, typename OpArgs = typename KernelParams&lt;Operator&gt;::type>
 void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
     const auto &alloc = plan.effectiveRegions().allocation();
 
@@ -32,9 +32,7 @@ void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
             }
         }
     }
-}
-
-</code></pre>
+}</code></pre>
     </div>
 </div>
 
@@ -48,9 +46,8 @@ void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
         Kernels are <code>inline</code> to avoid the overhead of function calls whenever possible, <br>at the cost of binary file size.
     </blockquote>
     <div class="additional-content">
-        <pre><code>
-
-#define KERN_METHOD_DEF(var) \
+        <h4>kernels.h</h4>
+        <pre class="hljs cpp"><code>#define KERN_METHOD_DEF(var) \
     template&lt;typename Operator&gt; \
     inline void _kernel_##var(typename KernelParams&lt;Operator&gt;::type &args, const parallel::Chunk &ch)
 
@@ -89,9 +86,7 @@ namespace morph {
         }
 
     }
-}
-
-</code></pre>
+}</code></pre>
     </div>
 </div>
 

@@ -7,9 +7,7 @@
     </ul>
     <div class="additional-content">
         <h4>reference_dilate.cpp</h4>
-        <pre>
-          <code>
-cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl, const int nThreads) {
+        <pre class="hljs cpp"><code>cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl, const int nThreads) {
     assert(image.type() == CV_8UC1);    (1)
 
     cv::Size imSize = image.size();
