@@ -4,18 +4,48 @@
 
 #serial {
   li {
-    font-size: 150%;
+    font-size: 125%;
+    margin: 14px 0;
   }
 }
 
-#openmp pre {
-  font-size: 110%;
-  color: #dddddd  ;
-  background-color: rgba(5,10,5, 0.8);
-  border-radius: 20px;
-  padding:20px;
-  .not-code {
-    font-family: $font-stack-serif;
+#openmp {
+  font-size: 160%;
+  line-height: 36px;
+
+  > pre {
+    width: 45%;
+    float: left;
+    margin: 0;
+
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding:20px;
+
+    color: #eee;
+    background-color: rgba(50, 50, 50, .9);
+
+    .lgreen { color: #8BC34A; } // 500
+    .lblue { color: #29B6F6; }  // 400
+    .amber { color: #FBC02D; }  // 700
+    .red { color: #EF5350; }    // 400
+  }
+  > ul {
+    width: 55%;
+    float: right;
+    margin: 52px 0 0;
+
+    display: block;
+    list-style-type: none;
+    padding: 0;
+
+    .lgreen { color: #689F38; } // 700
+    .lblue { color: #0288D1; }  // 700
+    .amber { color: #F57F17; }  // 900
+    .red { color: #D32F2F; }    // 700
+  }
+  li {
+    margin-left: 20px;
   }
 }
 

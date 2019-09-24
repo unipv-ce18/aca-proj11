@@ -1,9 +1,9 @@
-<div id="serial" class="step" data-x="1500" data-z="1000" data-rotate-y="20">
+<div id="serial" class="step semislide" data-x="1500" data-z="1000" data-rotate-y="20">
     <h1>Serial implementation </h1>
     <ul>
-        <li> Study of the algorithm;</li>
-        <li>Prototyping in MATLAB;</li>
-        <li>Translating to C++.</li>
+        <li>Study of the morphology algorithms;</li>
+        <li>Initial prototyping in MATLAB;</li>
+        <li>Translation to C++ code and testing.</li>
     </ul>
     <div class="additional-content">
         <h4>reference_dilate.cpp</h4>
@@ -37,19 +37,22 @@ cv::Mat morph::dilate(const cv::Mat &image, const StrEl &strEl, const int nThrea
     }
 
     return output;
-}
-          </code>
-        </pre>
+}</code></pre>
     </div>
 </div>
 
 <div id="openmp" class="step" data-z="1350" data-rel-x="280" data-rotate-y="20">
     <h1>Parallel version using OpenMP</h1>
-    <pre>
-<code>#pragma omp parallel for
-    num_threads(nThreads)   <span class="not-code">&leftarrow; Threads to use</span>
-    collapse(2)             <span class="not-code">&leftarrow; Operates on the 2d image</span>
-    default(none)           <span class="not-code">&leftarrow; No automatic variable scoping</span>
-    shared(...)             <span class="not-code">&leftarrow; Share variables between threads</span></code>
+    <pre><code>#pragma omp parallel for
+    <span class="lgreen">num_threads(nThreads)</span>
+    <span class="lblue">collapse(2)</span>
+    <span class="amber">default(none)</span>
+    <span class="red">shared(...)</span></code></pre>
+    <ul>
+        <li class="lgreen">&laquo;&nbsp; Threads to use</li>
+        <li class="lblue">&laquo;&nbsp; Operates on the 2d image</li>
+        <li class="amber">&laquo;&nbsp; No automatic variable scoping</li>
+        <li class="red">&laquo;&nbsp; Share variables between threads</li>
+    </ul>
 </pre>
 </div>

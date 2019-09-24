@@ -5,6 +5,11 @@ body {
   padding: 0;
 }
 
+// Nice code blocks
+pre {
+  font-weight: 700;
+}
+
 // To hide warning if browser is supported
 @import 'impress-fallback';
 
@@ -20,3 +25,9 @@ body {
 @import '../content/6-optimization';
 @import '../content/7-results';
 @import '../content/8-cuda';
+
+
+// Code blocks title in "more" frames
+#more-content-overlay h4 {
+  margin-bottom: 0;
+}
