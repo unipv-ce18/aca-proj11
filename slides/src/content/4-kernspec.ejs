@@ -1,12 +1,14 @@
 <div id="kern1" class="step" data-x="1000" data-scale="2" data-rotate-z="90">
-    The planning code outputs an array, which is used by the operator template function:
-
+    <p>
+        The planning code provides us an array, which is then used by the operator template executor:
+    </p>
     <ul>
-        <li>The outer array is indexed by the <code>ompl_get_thread_num()</code>;</li>
-        <li>The inner one is iterated in each thread and contains the chunks to operate upon.</li>
+        <li><i>The outer array</i> is indexed by the <code>omp_get_thread_num()</code>;</li>
+        <li><i>The inner one</i> is iterated in each thread and contains the chunks to work on.</li>
     </ul>
-
-    Each chunk has a type and is used to select the kernel better suited to process it
+    <p>
+        Each chunk has a type and is used to select the kernel better suited to process it
+    </p>
     <div class="additional-content">
         <h4>process_parallel.cpp</h4>
         <pre class="hljs cpp"><code>template&lt;typename Operator, typename OpArgs = typename KernelParams&lt;Operator&gt;::type>
@@ -37,13 +39,17 @@ void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
 </div>
 
 <div id="kern2" class="step" data-x="0" data-scale="2" data-rotate-z="90">
-   <p> To avoid code duplication, all kernels are variants of a single inline file, which is parameterized by preprocessor directives
-    and included multiple times in <code>kernels.h</code>. </p>
+   <p>
+       To avoid code duplication, all kernels are variants of a single inline file, which is parameterized by the
+       preprocessor and included multiple times in <code>kernels.h</code>.
+   </p>
     <p>
-        Each operator has kernel variants for the edges and the main part of the image, for which we skip any branch for border checking.
+        Each operator has kernel variants for the edges and the main part of the image,
+        for which we skip any branch for border checking.
     </p>
     <blockquote>
-        Kernels are <code>inline</code> to avoid the overhead of function calls whenever possible, <br>at the cost of binary file size.
+        Kernels are <code>inline</code> to avoid the overhead of function calls whenever possible,<br>
+        at the cost of binary file size.
     </blockquote>
     <div class="additional-content">
         <h4>kernels.h</h4>

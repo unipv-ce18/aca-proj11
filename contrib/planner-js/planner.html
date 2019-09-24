@@ -4,6 +4,9 @@
     <title>Ur Head Must Hurt</title>
     <meta charset="utf-8">
     <style>
+      body {text-align: center}
+      form {margin-bottom: 24px}
+
       form div {
         font-family: monospace;
         margin-bottom: 10px;
@@ -29,10 +32,10 @@
   <body>
     <form>
       <div class="par">
-        <label for="lw" title="Width">W</label><input id="lw" type="number" value="640"/>
+        <label for="lw" title="Width">W</label><input id="lw" type="number" value="960"/>
         <label for="lw" title="Height">H</label><input id="lh" type="number" value="480"/>
-        <label for="lsa" title="Safe area padding">SAP</label><input id="lsa" type="number" value="3">
-        <label for="lc" title="Cores">C</label><input id="lc" type="number" value="16">
+        <label for="lsa" title="Safe area padding">SAP</label><input id="lsa" type="number" value="12">
+        <label for="lc" title="Cores">C</label><input id="lc" type="number" value="24">
         <label for="ch" title="Max Chunk Height">HH</label><input id="ch" type="number" value="32">
       </div>
       <div class="smd">
@@ -45,7 +48,7 @@
       <div class="lay">
         Layers:
         <input id="layr" type="checkbox" checked><label for="layr">Regions</label>
-        <input id="layc" type="checkbox" checked><label for="layc">Chunks</label>
+        <input id="layc" type="checkbox"><label for="layc">Chunks</label>
         <input id="laye" type="checkbox"><label for="laye">Opt. V Region Splits</label>
         <input id="layd" type="checkbox"><label for="layd">Chunk Delimiters</label>
       </div>

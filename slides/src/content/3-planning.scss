@@ -1,3 +1,4 @@
+// Hide planning steps higher in stack
 .impress-on-plan2, .impress-on-plan3, .impress-on-plan4 {
   #plan1 {opacity: 0}
 }
@@ -5,6 +6,25 @@
   #plan2 {opacity: 0}
 }
 .impress-on-plan4 #plan3 {opacity: 0}
+
+// Increase transparency of lower steps in stack to increase readability
+.impress-on-plan1, .impress-on-plan2, .impress-on-plan3 {
+  #plan4 {opacity: 0}
+}
+.impress-on-plan1, .impress-on-plan2 {
+  #plan3 {opacity: 0.1}
+}
+.impress-on-plan1 #plan2 {opacity: 0.1}
+
+// Less visible "opt" step while on stack
+.impress-on-plan1, .impress-on-plan2, .impress-on-plan3, .impress-on-plan4 {
+  #opt {opacity: 0.1}
+}
+
+// Less visible "optresults" while on "plan3" with text on bottom
+.impress-on-plan3 #optresults {
+  opacity: 0.1;
+}
 
 #plan1, #plan2, #plan3, #plan4 {
   text-align: center;

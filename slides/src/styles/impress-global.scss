@@ -58,6 +58,12 @@ body.impress-mouse-timeout {
     font-weight: 300;
     color: darkred;
   }
+  h2 {
+    font-family: $font-stack-sans;
+    font-weight: 300;
+    color: darkblue;
+    font-variant: small-caps;
+  }
 
   position: relative;
   width: 900px;

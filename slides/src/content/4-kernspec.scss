@@ -1,16 +1,55 @@
+#kern1 li, #kern1 p:last-of-type {
+  opacity: 0;
+  transition: transform 1s, opacity 1s;
+}
+
+#kern1 li {
+  transform: translateX(-20px);
+  margin: 14px 0;
+
+  &:nth-child(1) {transition-delay: .3s;}
+  &:nth-child(2) {transition-delay: .6s;}
+}
+
+#kern1 p:last-of-type {
+  transform: translateY(-10px);
+  transition-delay: 1.2s;
+
+  margin-top: 40px;
+  font-style: italic;
+}
+
+
+#kern1.present, #kern1.past {
+  li, p:last-of-type {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+
 #kern2 p:nth-of-type(2) {
   text-align: right;
-  margin: 70px 0;
+  margin: 60px 0;
 }
 
 #kern2 blockquote {
+  transition: opacity 1s;
+  opacity: 0;
+  transition-delay: 1s;
+
   margin: 0;
-  background-color: rgba(0,0,0,0.1) ;
+  background-color: rgba(0,0,0,0.07) ;
   border-radius: 30px ;
-  padding: 5px;
+  padding: 10px 5px;
   text-align: center;
   font-family: $font-stack-sans;
   font-style: italic;
+}
+
+#kern2.present, #kern2.past {
+  blockquote {opacity: 1}
 }
 
 #custresults img {
