@@ -24,6 +24,7 @@
 
   user-select: none;
   cursor: pointer;
+  pointer-events: all;
 
   &::before {
     content: '+';

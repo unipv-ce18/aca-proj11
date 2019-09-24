@@ -9,3 +9,33 @@
 #plan1, #plan2, #plan3, #plan4 {
   text-align: center;
 }
+
+// Hide top slides when on scheduling and kern
+.impress-on-plan1,
+.impress-on-plan2,
+.impress-on-plan3,
+.impress-on-plan4,
+.impress-on-kern1,
+.impress-on-kern2 {
+  #simd, #results {
+    opacity: 0;
+  }
+}
+
+// To get a working iframe
+#more-content-overlay.extra-on-plan4 {
+  height: 100%;
+  padding: 16px 0 0 20px;
+  overflow: hidden;
+  background-color: white;
+
+  .additional-content {
+    height: 100%;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}

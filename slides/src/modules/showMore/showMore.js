@@ -26,6 +26,12 @@ function cbShowMore() {
   if (contentOverlay.firstChild !== null)
     contentOverlay.removeChild(contentOverlay.firstChild);
   contentOverlay.appendChild(currentContent.cloneNode(true));
+  for (let iframe of contentOverlay.querySelectorAll('iframe')) {
+    iframe.onload = function () {
+      iframe.contentDocument.addEventListener('keyup', cbKeyPress);
+    }
+  }
+
   contentOverlay.classList.add('extra-on-' + currentContent.parentElement.id);
   compRoot.classList.add('visible');
 }
