@@ -110,3 +110,17 @@
              rotateX(0deg) rotateY(5deg) rotateZ(180deg)
              scale(4) !important;
 }
+
+
+// Hide optresults while in optimization steps
+.impress-on-opt1,
+.impress-on-opt2,
+.impress-on-opt3,
+.impress-on-opt4 {
+  #optresults { opacity: 0; }
+}
+
+// Hide 1st slide while in optresults
+.impress-on-optresults #base-ops {
+  opacity: 0;
+}

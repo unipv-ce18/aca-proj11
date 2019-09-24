@@ -59,4 +59,7 @@ body::before {
   }
 }
 
-
+// Hide custresults while on cuda1
+.impress-on-cuda1 #custresults {
+  opacity: 0;
+}

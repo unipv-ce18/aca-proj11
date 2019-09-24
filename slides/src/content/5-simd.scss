@@ -8,3 +8,11 @@
 #intrin li {
   margin: 15px 0;
 }
+
+// Hide results while on simd
+.impress-on-simd {
+  #results { opacity: 0; }
+}
+.impress-on-intrin {
+  #results, #results2 { opacity: 0; }
+}

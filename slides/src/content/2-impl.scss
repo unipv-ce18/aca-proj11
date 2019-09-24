@@ -1,11 +1,13 @@
 .impress-on-serial #openmp {
   opacity:0;
 }
+
 #serial {
   li {
     font-size: 150%;
   }
 }
+
 #openmp pre {
   font-size: 110%;
   color: #dddddd  ;
@@ -17,5 +19,11 @@
   }
 }
 
-
-
+// Hide discordand optresults while on impl slides
+.impress-on-intro,
+.impress-on-base-ops,
+.impress-on-skeleton,
+.impress-on-serial,
+.impress-on-openmp {
+  #optresults { opacity: 0; }
+}

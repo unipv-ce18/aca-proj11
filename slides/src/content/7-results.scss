@@ -1,11 +1,15 @@
-#compilers img {
-  width: 100%;
+#results, #results2, #compilers {
+  img { width: 100%; }
 }
-#results img {
-  width: 100%;
+
+.impress-on-results {
+  #results2 { opacity: 0; }
 }
-#results2 img {
-  width: 100%;
+
+.impress-on-results, .impress-on-results2 {
+  #simd { opacity: 0; }
 }
-#compilers h1 {
+
+.impress-on-compilers {
+  #custresults { opacity: 0; }
 }
