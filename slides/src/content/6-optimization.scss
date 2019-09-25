@@ -1,18 +1,58 @@
 #opt1, #opt2, #opt3, #opt4 {
   transition: all 1000ms ease-in-out 500ms;
   opacity: 0;
+  h2 {margin-bottom: 10px}
+  p {margin-top: 0}
 }
 
-#opt p {
-  margin: 30px 0;
-}
-#opt p:nth-of-type(3) {
-  text-align: center;
+#opt {
+  p {
+    margin: 30px 0;
+    &:last-of-type {
+      text-align: right;
+      font-family: $font-stack-sans;
+      font-style: italic;
+    }
+  }
 }
 
-#opt p:nth-of-type(2) {
-  text-align: right;
+#optresults {
+  h1 { margin: 0 0 30px }
+  img { width: 100% }
+  img:nth-of-type(2) {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 10px;
+  }
 }
+
+.opt-bubble {
+  float: left;
+  display: inline-block;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-family: $font-stack-sans;
+  font-size: 80%;
+  letter-spacing: 1px;
+
+  margin-right: 20px;
+}
+
+.opt-bubble-yellow {
+  background-color: rgba(#ffeb3b, .2);
+  color: #e65100;
+}
+
+.opt-bubble-green {
+  background-color: rgba(#9ccc65, .2);
+  color: #558b2f;
+}
+
+.opt-bubble-red {
+  background-color: rgba(#ef5350, .2);
+  color: #c62828;
+}
+
 .impress-on-intrin, .impress-on-opt, .impress-on-results {
   #opt1, #opt2, #opt3, #opt4 {
     opacity: 0 !important;
@@ -67,7 +107,7 @@
   opacity: 1;
   transform: translate(-50%, -50%)
              translate3d(800px, 1500px, -5000px)
-             rotateX(0deg) rotateY(5deg) rotateZ(180deg)
+             rotateX(0deg) rotateY(10deg) rotateZ(180deg)
              scale(4) !important;
 }
 
