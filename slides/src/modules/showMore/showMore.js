@@ -38,6 +38,7 @@ function cbShowMore() {
     hljs.highlightBlock(pre);
   }
 
+  contentOverlay.className = '';
   contentOverlay.classList.add('extra-on-' + currentContent.parentElement.id);
   compRoot.classList.add('visible');
 }
