@@ -1,0 +1,9 @@
+#notes .notes-domk {color: #a00}
+#notes .notes-luca {color: #00a}
+
+#notes li {
+  margin: 10px 0;
+}
+#notes code {
+  font-weight: bold;
+}

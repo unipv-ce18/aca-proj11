@@ -3,51 +3,56 @@
     <ul>
         <li>
             <h3>Thread</h3>
-            <p>
-                Base unit of computation,<br> single instance of a kernel
-            </p>
+            <p>Base unit of computation,<br> single instance of a kernel</p>
         </li>
         <li>
             <h3>Block</h3>
-            <p>
-                A bunch of threads to be worked on together in a <em>streaming multiprocessor</em>
-            </p>
+            <p>A bunch of threads to be worked on together in a <em>streaming multiprocessor</em></p>
         </li>
         <li>
             <h3>Grid</h3>
-            <p>
-                A multidimensional group of blocks, sized as needed
-            </p>
+            <p>A multidimensional group of blocks, sized as needed</p>
         </li>
     </ul>
 
     <div class="notes">
-        Warps and SMs, no speculative execution/branch prediction
+        <ul class="notes-luca">
+            <li>Kernels on a grid, blocks, treads</li>
+            <li>SMprocs (2K threads) and 32 thread warps</li>
+            <li>SIMT instr. set, branching disables concurrency for warp</li>
+            <li>No branch prediction/speculative execution</li>
+        </ul>
     </div>
 </div>
 
 <div id="cuda2" class="step" data-x="2000" data-y="3500" data-z="0" data-rotate-z="120">
     <h1>Implementation</h1>
-
     <ul>
         <li><strong>Each thread</strong> works over a single pixel;</li>
         <li><strong>Blocks</strong> are square and sized to allocate the highest number of threads;</li>
         <li>Blocks are arranged in a <strong>grid</strong> to process the whole image.</li>
     </ul>
-
     <p>
         Blocks and Threads are automatically scheduled by the runtime over the available <em>CUDA cores</em>.
     </p>
-    <div class="notes">2D grid with the size of the image over the size of a single block.
-        we measured timings by using the device events provided by the CUDA API.
+
+    <div class="notes">
+        <ul class="notes-domk">
+            <li>2D grid with the size of the image over the size of a single block</li>
+            <li>We measured timings by using the device events provided by the CUDA API</li>
+        </ul>
     </div>
 </div>
 
 <div id="cuda3" class="step" data-x="3000" data-y="4000" data-z="0" data-rotate-z="150">
     <h1>NVIDIA CUDA results</h1>
     <%= require("!!ejs-loader!" + REPORT_IMAGES_DIR + "bench_cuda.svg")() %>
-    <div class="notes">difficult to compute a precise theoretical speedup due to architectural differences
-        difference from theoretical and real speedup
-        space for optimizations cause of difference in generations
+
+    <div class="notes">
+        <ul class="notes-domk">
+            <li>Difficult to compute a precise theoretical speedup due to architectural differences in generations</li>
+            <li>Difference from theoretical and real speedup</li>
+            <li>Our implementation leaves space for optimizations</li>
+        </ul>
     </div>
 </div>

@@ -2,13 +2,27 @@
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_cloud.svg')%>">
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_6900_8k.svg')%>">
 
-<div class="notes">about 2 speedup;
-until not exceed physical cores</div>
+    <div class="notes">
+        <ul class="notes-domk">
+            <li>About 2 speedup</li>
+            <li><i>Less visible with smaller images</i></li>
+            <li>Until not exceed physical cores</li>
+        </ul>
+    </div>
 </div>
 
 <div id="results2" class="step semislide" data-x="3200" data-y="500" data-z="4500" data-scale="4" data-rotate-z="-20">
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_cloud_simd.svg')%>">
 
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>Effective SSE S=15.36/16, AVX S=25.9/32</li>
+            <li>AVX gain decreases w/ smaller images</li>
+            <li>AVX512 on Google Cloud</li>
+            <li><b>16 cores is not nice</b></li>
+            <li>For regular images, we have &lt;40ms, 25fps</li>
+        </ul>
+    </div>
 </div>
 
 <div id="compilers" class="step" data-x="0" data-y="3000" data-z="0" data-rotate-z="90">
@@ -16,4 +30,12 @@ until not exceed physical cores</div>
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_compilers.svg')%>">
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_compilers_simd.svg')%>">
 
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>All optimizations turned on</li>
+            <li>GCC is faster with SSE</li>
+            <li>Clang is faster otherwise</li>
+            <li>MSVC, lost cause - diff. ABI/dependencies</li>
+        </ul>
+    </div>
 </div>

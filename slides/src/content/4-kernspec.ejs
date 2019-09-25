@@ -36,6 +36,15 @@ void processParallel(parallel::Plan &amp;plan, OpArgs &amp;params) {    (1)
     }
 }</code></pre>
     </div>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>Outer idx by thread, inner iter chunks</li>
+            <li><b>Show process_parallel.cpp</b> (fast)</li>
+            <li>Select best kernel by type</li>
+            <li>Why template function</li>
+        </ul>
+    </div>
 </div>
 
 <div id="kern2" class="step" data-x="0" data-scale="2" data-rotate-z="90">
@@ -94,6 +103,16 @@ namespace morph {
     }
 }</code></pre>
     </div>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>Single include to avoid duplication</li>
+            <li>Variants by operator, by chunk type</li>
+            <li>Select best kernel by type</li>
+            <li><b>Show kernels.h</b> (fast)</li>
+            <li>Why inline functions and template</li>
+        </ul>
+    </div>
 </div>
 
 <div id="custresults" class="step" data-x="500" data-y="3000" data-z="0" data-scale="2" data-rotate-x="-20">
@@ -101,10 +120,15 @@ namespace morph {
     <img src=<%=require(REPORT_IMAGES_DIR + 'bench_comp_plan.svg')%>>
     <img src=<%=require(REPORT_IMAGES_DIR + 'bench_comp_plan_8k.svg')%>>
     <p>
-        With custom planning and kernels we managed to achieve a speedup up to ~1.17; further optimization become possible <span class="yellow">as shown in yellow</span>.
-
+        With custom planning and kernels we managed to achieve a speedup up to ~1.17;
+        further optimization become possible <span class="yellow">as shown in yellow</span>.
     </p>
-    <div class="notes">Check of effective speedup of our algorithm
-        better with bigger images
-    better after vtune optimization</div>
+
+    <div class="notes">
+        <ul class="notes-domk">
+            <li>Check of effective speedup of our algorithm</li>
+            <li>Better with bigger images</li>
+            <li>Better after VTune optimization <i>only possible on our specialized kernels</i></li>
+        </ul>
+    </div>
 </div>

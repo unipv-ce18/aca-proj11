@@ -5,6 +5,14 @@
     <p>We preferred to profile a single large execution of the algorithm over multiple smaller runs to spend as much
         time as possible in the parallel region.</p>
     <p>Here are the optimizations we made thanks to profiling &rightarrow;</p>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>VTune to find bottlenecks and utilization</li>
+            <li>Profile a single large run, more time in parallel region, less OpenCV imgcodec I/O</li>
+            <li><b>Performance suboptimal, we optimized</b></li>
+        </ul>
+    </div>
 </div>
 
 <!-- Beware, optX position is completely CSS defined -->
@@ -15,8 +23,13 @@
         We found out that the <code>set1</code> family of intrinsics was taking too much time, so we expanded the
         structural element in memory to the simd width before execution
     </p>
-    <div class="opt-bubble opt-bubble-green">
-        +10% overall performance boost
+    <div class="opt-bubble opt-bubble-green">+10% overall performance boost</div>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>The <code>set1</code> problem, SE expansion & load</li>
+            <li><b>Got 10% boost</b></li>
+        </ul>
     </div>
 </div>
 
@@ -26,11 +39,16 @@
         By using a new kernel type to process top and bottom edges of the image we can skip some border checks and make
         use of SIMD. We replaced the checks with pre calculations of loop ranges too.
     </p>
-    <div class="opt-bubble opt-bubble-green">
-        + Boost by using specialized kernels
-    </div>
-    <div class="opt-bubble opt-bubble-red">
-        - Min. gain by replacing checks w/ ranges
+    <div class="opt-bubble opt-bubble-green">+ Boost by using specialized kernels</div>
+    <div class="opt-bubble opt-bubble-red">- Min. gain by replacing checks w/ ranges</div>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>New cust. kernels to process top & bottom</li>
+            <li>Skip X axis checks</li>
+            <li>Precalculate bounds instead of if branches</li>
+            <li><b>Kernels boost, but for bounds meh (smart compiler?)</b></li>
+        </ul>
     </div>
 </div>
 
@@ -39,8 +57,15 @@
     <p>
         With proper planner parameters and allocation of the images in memory we can ensure alignment of chunks addresses.
     </p>
-    <div class="opt-bubble opt-bubble-yellow">
-        ~ No performance gain due to the nature of the algorithm
+    <div class="opt-bubble opt-bubble-yellow">~ No performance gain due to the nature of the algorithm</div>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>Thanks to cust. plan we can memory align chunks</li>
+            <li>Proper positioning on load, consider SAP</li>
+            <li>Cache should benefit, appropriate SIMD instrs.</li>
+            <li><b>No advantages</b></li>
+        </ul>
     </div>
 </div>
 
@@ -53,6 +78,15 @@
         We created instead a single kernel to perform the required processing in a single sweep, which saved us
         the allocation of an additional temporary imaging memory.
     </p>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>New operators required for skel</li>
+            <li>Hijack dilate and perform steps before saving</li>
+            <li>Single sweep, less RAM usage</li>
+            <li><b>Implemented in 1st place, no comparison</b></li>
+        </ul>
+    </div>
 </div>
 
 <div id="optresults" class="step semislide" data-x="1000" data-z="-3000" data-scale="4" data-rotate-z="130" data-rotate-x="20"
@@ -62,6 +96,11 @@
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_opts_8k.svg')%>">
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_opts_simd.svg')%>">
     <img src="<%=require(REPORT_IMAGES_DIR + 'bench_opts_8k_simd.svg')%>">
-<div class="notes">further speedup of ~1.4 ;
-    Similar results with SIMD</div>
+
+    <div class="notes">
+        <ul class="notes-domk">
+            <li>Further speedup of ~1.4</li>
+            <li>Similar results with SIMD</li>
+        </ul>
+    </div>
 </div>

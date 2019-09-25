@@ -37,12 +37,15 @@
     return output;
 }</code></pre>
     </div>
-    <div class="notes"> Since the erosion shares some core operations with the dilation,
-        we decided to start right away with OpenMP and implement erosion at a later time.
-
-        Ensure that the loaded image is grayscale
-        Saturate the result to 255 and store
-
+    <div class="notes">
+        <ul class="notes-domk">
+           <li>
+               Since the erosion shares some core operations with the dilation,
+               we decided to start right away with OpenMP and implement erosion at a later time.
+           </li>
+            <li>Ensure that the loaded image is grayscale</li>
+            <li>Saturate the result to 255 and store</li>
+        </ul>
     </div>
 </div>
 
@@ -59,5 +62,12 @@
         <li class="amber">&laquo;&nbsp; No automatic variable scoping</li>
         <li class="red">&laquo;&nbsp; Share variables between threads</li>
     </ul>
-</pre>
+
+    <div class="notes">
+        <ul class="notes-luca">
+            <li>Thread # by environment, sane defaults</li>
+            <li>Full control over OMP variable treatment</li>
+            <li><b>It schedules by rows, suboptimal</b></li>
+        </ul>
+    </div>
 </div>
