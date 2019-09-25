@@ -1,11 +1,20 @@
 // Hide planning steps higher in stack
 .impress-on-plan2, .impress-on-plan3, .impress-on-plan4 {
-  #plan1 {opacity: 0}
+  #plan1 {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 .impress-on-plan3, .impress-on-plan4 {
-  #plan2 {opacity: 0}
+  #plan2 {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
-.impress-on-plan4 #plan3 {opacity: 0}
+.impress-on-plan4 #plan3 {
+  opacity: 0;
+  pointer-events: none;
+}
 
 // Increase transparency of lower steps in stack to increase readability
 .impress-on-plan1, .impress-on-plan2, .impress-on-plan3 {
@@ -39,6 +48,7 @@
 .impress-on-kern2 {
   #simd, #results {
     opacity: 0;
+    pointer-events: none;
   }
 }
 
