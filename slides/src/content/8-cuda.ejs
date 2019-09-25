@@ -1,5 +1,29 @@
 <div id="cuda1" class="step" data-x="1000" data-y="3000" data-z="0" data-rotate-z="90">
     <h1>An alternative approach: CUDA</h1>
+    <ul>
+        <li>
+            <h3>Thread</h3>
+            <p>
+                Base unit of computation,<br> single instance of a kernel
+            </p>
+        </li>
+        <li>
+            <h3>Block</h3>
+            <p>
+                A bunch of threads to be worked on together in a <em>streaming multiprocessor</em>
+            </p>
+        </li>
+        <li>
+            <h3>Grid</h3>
+            <p>
+                A multidimensional group of blocks, sized as needed
+            </p>
+        </li>
+    </ul>
+
+    <div class="notes">
+        Warps and SMs, no speculative execution/branch prediction
+    </div>
 </div>
 
 <div id="cuda2" class="step" data-x="2000" data-y="3500" data-z="0" data-rotate-z="120">
@@ -7,7 +31,7 @@
 
     <ul>
         <li><strong>Each thread</strong> works over a single pixel;</li>
-        <li><strong>Blocks</strong> are squared and sized to allocate the highest number of threads;</li>
+        <li><strong>Blocks</strong> are square and sized to allocate the highest number of threads;</li>
         <li>Blocks are arranged in a <strong>grid</strong> to process the whole image.</li>
     </ul>
 

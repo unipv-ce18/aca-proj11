@@ -12,7 +12,19 @@
       text-align: right;
       font-family: $font-stack-sans;
       font-style: italic;
+
+      transition: opacity 1s, transform 1s;
+      opacity: 0;
+      transform: translateX(-40px);
     }
+  }
+}
+
+#opt.present, #opt.past, #opt.prev {
+  p:last-of-type {
+    opacity: 1;
+    transform: none;
+    transition-delay: 3s;
   }
 }
 

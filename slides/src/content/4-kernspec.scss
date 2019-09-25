@@ -20,7 +20,7 @@
 }
 
 
-#kern1.present, #kern1.past {
+#kern1.present, #kern1.prev {
   li, p:last-of-type {
     opacity: 1;
     transform: none;
@@ -48,7 +48,7 @@
   font-style: italic;
 }
 
-#kern2.present, #kern2.past {
+#kern2.present, #kern2.prev {
   blockquote {opacity: 1}
 }
 
@@ -58,9 +58,7 @@
 }
 
 #custresults {
-  h2 {
-    text-align: center;
-  }
+  text-align: center;
   .yellow {
     color:#cc8000;
   }

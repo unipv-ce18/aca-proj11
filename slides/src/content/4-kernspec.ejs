@@ -3,7 +3,7 @@
         The planning code provides us an array, which is then used by the operator template executor:
     </p>
     <ul>
-        <li><i>The outer array</i> is indexed by the <code>omp_get_thread_num()</code>;</li>
+        <li><i>The outer array</i> is indexed by <code>omp_get_thread_num()</code>;</li>
         <li><i>The inner one</i> is iterated in each thread and contains the chunks to work on.</li>
     </ul>
     <p>

@@ -2,16 +2,19 @@
 <h1>SIMD processing</h1>
     <ul>
         <li>To obtain an additional speedup, we choose to make <em>explicit use</em> of SIMD  instructions in our kernels, adding support for SSE2;</li>
-        <li>Support for SSE2, AVX2 and AVX512 was added;</li>
+        <li>We also adopted the AVX2 and AVX512 extensions;</li>
         <li>Each instruction set provides a different theoretical speedup.</li>
     </ul>
 </div>
 
 <div id="intrin" class="step" data-x="5000" data-scale="4">
-<p><em>Intel intrinsics</em> were used to invoke SIMD instructions from C/C++.
-Intrinsics are replaced with their equivalent intructions by the compiler.
-</p>
-    Additionally, we:
+    <p>
+        <em>Intel intrinsics</em> were used to invoke SIMD instructions from C/C++.
+        Intrinsics are replaced with their equivalent intructions by the compiler.
+    </p>
+    <p>
+        <i>Additionally, we:</i>
+    </p>
     <ul>
         <li>Used CMake options to set the appropriate compile flags;</li>
         <li>Created preprocessor defines to conditionally compile SIMD kernels.</li>
