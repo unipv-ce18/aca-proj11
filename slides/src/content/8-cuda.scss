@@ -65,11 +65,15 @@ body::before {
     color:#76b900;
   }
 }
+#cuda1 h1 {
+  text-align: center;
+}
 #cuda3 h1 {
   margin-bottom: 60px;
 }
 
 // Hide custresults while on cuda1
-.impress-on-cuda1 #custresults {
-  opacity: 0;
+.impress-on-cuda1, .impress-on-cuda2 {
+  #custresults { opacity: 0; }
+  #optresults { opacity: 0; }
 }
