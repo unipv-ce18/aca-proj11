@@ -54,13 +54,19 @@ body::before {
   color: gray(80);
   font-family: $font-stack-sans;
   h1 {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     color:#76b900;
     font-family: $font-stack-brand-nv;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
   }
+  strong, em {
+    color:#76b900;
+  }
+}
+#cuda3 h1 {
+  margin-bottom: 60px;
 }
 
 // Hide custresults while on cuda1
