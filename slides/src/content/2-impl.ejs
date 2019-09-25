@@ -37,6 +37,13 @@
     return output;
 }</code></pre>
     </div>
+    <div class="notes"> Since the erosion shares some core operations with the dilation,
+        we decided to start right away with OpenMP and implement erosion at a later time.
+
+        Ensure that the loaded image is grayscale
+        Saturate the result to 255 and store
+
+    </div>
 </div>
 
 <div id="openmp" class="step" data-z="1350" data-rel-x="280" data-rotate-y="20">

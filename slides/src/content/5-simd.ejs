@@ -5,6 +5,10 @@
         <li>We also adopted the AVX2 and AVX512 extensions;</li>
         <li>Each instruction set provides a different theoretical speedup.</li>
     </ul>
+    <div class="notes">A modern compiler would ideally emit these instructions in an optimized build,
+        however we were not able to observe changes in performance by toggling on and off SIMD support
+        by the compiler after various attempts of reorganization of our code.
+    so we implemented manually</div>
 </div>
 
 <div id="intrin" class="step" data-x="5000" data-scale="4">
@@ -44,4 +48,7 @@
 #define simd_loadu      _mm512_loadu_si512
 #define simd_storeu     _mm512_storeu_si512</code></pre>
     </div>
+    <div class="notes"> CMake options to force-enable support for an instruction set by the compiler;
+        reprocessor defines to conditionally compile and use SIMD kernels.
+    simd func renamed to reuse same file</div>
 </div>
