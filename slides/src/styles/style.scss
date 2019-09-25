@@ -102,3 +102,67 @@ pre {
 #more-content-overlay h4 {
   margin-bottom: 0;
 }
+
+#last-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 1s;
+
+}
+
+.impress-on-outro #last-slide {
+  opacity: 1;
+  transition-delay: 2s;
+  pointer-events: all;
+}
+
+.impress-progressbar {transition: opacity 1s}
+.impress-on-outro .impress-progressbar {opacity: 0}
+
+#last-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 1;
+  text-align: center;
+  margin: 20vh auto 0;
+
+  color: #eee;
+  font-family: $font-stack-sans;
+  h1 {
+    color: deepskyblue;
+  }
+  ul {
+    padding: 0;
+  }
+  li {
+    list-style-type: none;
+    margin-bottom: 20px;
+  }
+  z-index: 1000;
+}
+
+asciinema-player {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.asciinema-player-wrapper,
+.asciinema-player,
+.asciinema-terminal {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+asciinema-player .play-button {
+  display: none !important;
+}

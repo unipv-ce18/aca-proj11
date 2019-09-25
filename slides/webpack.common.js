@@ -10,7 +10,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ttf|otf|eot|svg|woff(2)?|png|mp4)$/,
+        test: /\.(ttf|otf|eot|svg|woff(2)?|png|mp4|cast)$/,
         loader: 'file-loader',
         options: {
           name: 'assets/[hash].[ext]'
@@ -27,6 +27,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       REPORT_IMAGES_DIR: JSON.stringify(path.resolve(__dirname, '../report/images') + '/')
+    }),
+    new webpack.ProvidePlugin({
+      React: 'react'  // Cause asciinema-player really sucks
     }),
     new HtmlPlugin({
       title: 'Parallelizing Mathematical Morphology · Slides',
