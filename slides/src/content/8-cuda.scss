@@ -137,3 +137,16 @@ body::before {
   li {transition-delay: 1.3s}
   li:nth-of-type(2) {transition-delay: 1s}
 }
+
+#cuda2 {
+  p, li {transition: opacity 1s, transform 1s; opacity: 0}
+  li {transform: translateX(-20px)}
+  p {transform: translateY(-20px)}
+}
+
+#cuda2.present, #cuda2.prev {
+  p, li {opacity: 1; transform: none}
+  li:nth-of-type(2) {transition-delay: .3s}
+  li:nth-of-type(3) {transition-delay: .6s}
+  p {transition-delay: 1s}
+}
