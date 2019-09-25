@@ -4,6 +4,17 @@
 
 <div id="cuda2" class="step" data-x="2000" data-y="3500" data-z="0" data-rotate-z="120">
     <h1>Implementation</h1>
+
+    <ul>
+        <li>Each thread works over a single pixel;</li>
+        <li>Blocks are squared and sized to allocate the highest number of threads;</li>
+        <li>Blocks are arranged in a grid to process the whole image.</li>
+    </ul>
+
+    <p>
+        Blocks and Threads are automatically scheduled by the runtime over the available CUDA cores
+    </p>
+
 </div>
 
 <div id="cuda3" class="step" data-x="3000" data-y="4000" data-z="0" data-rotate-z="150">

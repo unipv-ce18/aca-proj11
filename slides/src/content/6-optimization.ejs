@@ -10,7 +10,7 @@
 <!-- Beware, optX position is completely CSS defined -->
 
 <div id="opt1" class="step" data-x="800" data-z="-5000" data-scale="4" data-rotate-z="180">
-    <h3>Structural element expansion</h3>
+    <h2>Structural element expansion</h2>
     <p>
         We found out that the <code>set1</code> family of intrinsics was taking too much time, so we expanded the
         structural element in memory to the simd width before execution
@@ -21,25 +21,32 @@
 </div>
 
 <div id="opt3" class="step" data-scale="4" data-rotate-z="180">
-    <h3>Improved edge processing</h3>
+    <h2>Improved edge processing</h2>
     <p>
-
+    By using a new kernel type to process top and bottom edges of the image we can skip some border checks and make use of SIMD.
+       We replaced the checks with pre calculations of loop ranges too.
     </p>
+
+    + Performance gain by using new kernels     - Not noticeable boost by replacing checks with ranges
 </div>
 
 <div id="opt4" class="step" data-scale="4" data-rotate-z="180">
-<h3>Image alignment</h3>
-    <p3>
+<h2>Image alignment</h2>
+    <p>
+    With proper planner parameters and allocation of the images in memory we can ensure alignment of chunks addresses.
+    </p>
 
-    </p3>
+    - No performance gain due to the nature of the algorithm
 
 </div>
 
 <div id="opt2" class="step" data-scale="4" data-rotate-z="180">
-    <h3>Shortcut in skeleton computation</h3>
-    <p3>
-
-    </p3>
+    <h2>Shortcut in skeleton computation</h2>
+    <p>
+To implement skeleton we needed new "operators" for per-pixel maximum and subtraction.
+        We created instead a single kernel to perform the required processing in a single sweep, which saved us
+        the allocation of an additional temporary imaging memory.
+    </p>
 </div>
 
 <div id="optresults" class="step" data-x="1000" data-z="-3000" data-scale="4" data-rotate-z="130" data-rotate-x="20"

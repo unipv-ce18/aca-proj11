@@ -52,10 +52,14 @@ body::before {
 
 #cuda1, #cuda2, #cuda3 {
   color: gray(80);
+  font-family: $font-stack-sans;
   h1 {
     margin-bottom: 40px;
     color:#76b900;
-    font-family: $font-stack-sans;
+    font-family: $font-stack-brand-nv;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }
 
