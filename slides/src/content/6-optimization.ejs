@@ -15,6 +15,10 @@
     </div>
 </div>
 
+<div id="optb" class="step semislide" data-z="-4500" data-scale="4" data-rotate-z="180">
+    <img src="<%= require('../vtune_results.png') %>"></img>
+</div>
+
 <!-- Beware, optX position is completely CSS defined -->
 
 <div id="opt1" class="step" data-x="800" data-z="-5000" data-scale="4" data-rotate-z="180">
@@ -37,7 +41,7 @@
     <h2>Improved edge processing</h2>
     <p>
         By using a new kernel type to process top and bottom edges of the image we can skip some border checks and make
-        use of SIMD. We replaced the checks with pre calculations of loop ranges too.
+        use of SIMD. We replaced the checks with pre-calculation of loop ranges too.
     </p>
     <div class="opt-bubble opt-bubble-green">+ Boost by using specialized kernels</div>
     <div class="opt-bubble opt-bubble-red">- Min. gain by replacing checks w/ ranges</div>
@@ -76,7 +80,7 @@
     </p>
     <p>
         We created instead a single kernel to perform the required processing in a single sweep, which saved us
-        the allocation of an additional temporary imaging memory.
+        the allocation of an additional temporary image in memory.
     </p>
 
     <div class="notes">
